@@ -1,0 +1,17 @@
+#download any pi updates
+sudo apt-get update 
+
+#install the downloaded pi updates
+sudo apt-get upgrade 
+
+#open pi config. window
+sudo raspi-config
+
+#reboot the pi OS
+sudo reboot
+
+#capture image as "image.jpeg" in the same directory
+raspistill -o image.jepg
+
+#capture video as "video.h264" in the same directory
+raspivid -o video.h264
