@@ -17,9 +17,9 @@ while True:
 
 # temp  = F for Fahrenheit
 # temp  = C for Celsius
-def Get_Temperature(temp, DHT11_temperature )
+def Get_Temperature(temp, DHT11_temperature)
     if temp = "F"
         temperature = 9/5.0 * DHT11_temperature + 32
     else if temp = "C"
-        tempertaure = 5.0/9 * (DHT11_temperature - 32)
+        temperature = 5.0/9 * (DHT11_temperature - 32)
     return  temperature
