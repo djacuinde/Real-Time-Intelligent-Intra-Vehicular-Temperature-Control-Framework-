@@ -15,3 +15,9 @@ raspistill -o image.jepg
 
 #capture video as "video.h264" in the same directory
 raspivid -o video.h264
+
+#download zip files <> = user input 
+wget -O <File Name.zip> <http zip link>
+
+#unzip downloaded zip file 
+unzip <File Name.zip>
