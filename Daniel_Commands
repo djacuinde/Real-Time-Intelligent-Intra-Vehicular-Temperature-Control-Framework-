@@ -46,3 +46,5 @@ alias python='/usr/bin/python3'         #insert and save
 :~$ . ~/.bashrc                         #reload bashrc
 :~$ python --version                    #should be the python3 version now
 
+#install pip for python3
+sudo apt-get install python3-pip
