@@ -34,5 +34,15 @@ workon <Project Name>
 #Create directory file
 mkdir <File Name>
 
-#Delete all file on the directory
+#Delete all files on the directory
 rm -rf <File Name>
+
+#Change default python 2.7 to python 3
+:~$ python --version
+:~$ python3 --version 
+:~$ type -a python3                     #'/usr/bin/python3'
+:~$ nano ~/.bashrc
+alias python='/usr/bin/python3'         #insert and save
+:~$ . ~/.bashrc                         #reload bashrc
+:~$ python --version                    #should be the python3 version now
+
