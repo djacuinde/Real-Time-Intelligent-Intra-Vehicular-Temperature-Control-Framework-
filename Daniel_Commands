@@ -30,3 +30,9 @@ workon <Project Name>
 
 #Deactivate virtualenvs
 (cv) deactivate
+
+#Create directory file
+mkdir <File Name>
+
+#Delete all file on the directory
+rm -rf <File Name>
