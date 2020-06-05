@@ -21,3 +21,9 @@ wget -O <File Name.zip> <http zip link>
 
 #unzip downloaded zip file 
 unzip <File Name.zip>
+
+#Create a new virtualenv
+mkvirtualnev <Project Name>
+
+#Load or swithc virtualenvs
+workon <Project Name>
