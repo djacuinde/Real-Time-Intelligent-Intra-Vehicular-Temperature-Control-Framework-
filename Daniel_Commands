@@ -27,3 +27,6 @@ mkvirtualnev <Project Name>
 
 #Load or switch virtualenvs
 workon <Project Name>
+
+#Deactivate virtualenvs
+(cv) deactivate
