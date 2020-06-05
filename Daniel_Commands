@@ -25,5 +25,5 @@ unzip <File Name.zip>
 #Create a new virtualenv
 mkvirtualnev <Project Name>
 
-#Load or swithc virtualenvs
+#Load or switch virtualenvs
 workon <Project Name>
