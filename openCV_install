@@ -1,6 +1,8 @@
-Current openCV (v.4.2.0) installed location in dan@dan-VirtualBox:~/build using python3
+Current openCV (v.4.2.0) installed location in user@user-VirtualBox:~/build using python3
 
 Installment:
+:~ $ sudo apt-get update
+:~ $ sudo apt-get upgrade
 :~ $ sudo apt-get -y install python3-pip
 :~ $ pip3 isntall --upgrade pip
 :~ $ mkdir build
