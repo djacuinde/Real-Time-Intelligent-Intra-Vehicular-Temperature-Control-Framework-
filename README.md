@@ -6,4 +6,5 @@ The  project is a real-time camera-based  monitoring system, capable of identify
 Project Developers:
 
 Daniel Jacuinde-Alvarez (CSU, Fresno)
+
 James Dols (CSU, Fresno)
