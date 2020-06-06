@@ -1,7 +1,7 @@
-#download any pi updates
+#download any updates
 sudo apt-get update 
 
-#install the downloaded pi updates
+#install the downloaded updates
 sudo apt-get upgrade 
 
 #open pi config. window
@@ -10,31 +10,31 @@ sudo raspi-config
 #reboot the pi OS
 sudo reboot
 
-#capture image as "image.jpeg" in the same directory
+#capture image as "image.jpeg" in the same directory using pi-Camera
 raspistill -o image.jepg
 
-#capture video as "video.h264" in the same directory
+#capture video as "video.h264" in the same directory using pi-Camera
 raspivid -o video.h264
 
 #download zip files <> = user input 
 wget -O <File Name.zip> <http zip link>
 
-#unzip downloaded zip file 
+#unzip downloaded zip file <> = user input 
 unzip <File Name.zip>
 
-#Create a new virtualenv
+#Create a new virtualenv <> = user input 
 mkvirtualnev <Project Name>
 
-#Load or switch virtualenvs
+#Load or switch virtualenvs <> = user input 
 workon <Project Name>
 
 #Deactivate virtualenvs
 (cv) deactivate
 
-#Create directory file
+#Create directory file <> = user input 
 mkdir <File Name>
 
-#Delete all files on the directory
+#Delete all files on the directory <> = user input 
 rm -rf <File Name>
 
 #Change default python 2.7 to python 3
