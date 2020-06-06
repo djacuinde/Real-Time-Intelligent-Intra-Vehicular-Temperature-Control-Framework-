@@ -47,4 +47,6 @@ alias python='/usr/bin/python3'         #insert and save
 :~$ python --version                    #should be the python3 version now
 
 #install pip for python3
-sudo apt-get install python3-pip
+sudo apt-get -y install python3-pip
+pip3 --version                          #show pip3 version and python running
+
