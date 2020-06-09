@@ -4,7 +4,7 @@ Software Requirements:
 OpenCV 3.4 or higher 
 GNU Compiler Collection (GCC) 3.4 or higher
 CMake 2.8 or higher
-Python 3.5 or higher 
+Python 3.5 or higher          #check version of an application :~$ <app> --version  (e.g. python3 --version)
 
 Operating SYstem Requirements
 Ubuntu 18.04.x LTS, 64-bit    #check for ubuntu updates run :~$ update-manager 
