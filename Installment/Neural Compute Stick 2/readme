@@ -6,7 +6,7 @@ GNU Compiler Collection (GCC) 3.4 or higher
 CMake 2.8 or higher
 Python 3.5 or higher 
 
-Operating SYstem 
+Operating SYstem Requirements
 Ubuntu 18.04.x LTS, 64-bit    #check for ubuntu updates run :~$ update-manager 
                               #check current version :~$ lsb_release -a
 CentOS 7.4, 64-bit
