@@ -4,6 +4,9 @@ sudo apt-get update
 #install the downloaded updates
 sudo apt-get upgrade 
 
+#check for ubuntu updates
+update-manager
+
 #open pi config. window
 sudo raspi-config
 
@@ -50,5 +53,5 @@ alias python='/usr/bin/python3'         #insert and save
 sudo apt-get -y install python3-pip
 pip3 --version                          #show pip3 version and python running
 
-#isntall cmake 
+#install cmake 
 sudo apt-get -y install cmake
