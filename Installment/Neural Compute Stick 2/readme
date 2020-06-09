@@ -1,0 +1,16 @@
+Intel Neural Compute Stick 2 uses OpenVINO toolkit.
+
+Software Requirements:
+OpenCV 3.4 or higher 
+GNU Compiler Collection (GCC) 3.4 or higher
+CMake 2.8 or higher
+Python 3.5 or higher 
+
+Operating SYstem 
+Ubuntu 18.04.x LTS, 64-bit
+CentOS 7.4, 64-bit
+Yocto Project v3.0, 64-bit
+
+Installment Guide
+https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html 
+
