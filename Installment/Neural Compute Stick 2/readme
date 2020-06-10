@@ -12,6 +12,8 @@ Ubuntu 18.04.x LTS, 64-bit    #check for ubuntu updates run :~$ update-manager
 CentOS 7.4, 64-bit
 Yocto Project v3.0, 64-bit
 
-Installment Guide
-https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html 
+Installment Guide:
+Follow guide in openVINO file 
+              or       
+follow https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html 
 
