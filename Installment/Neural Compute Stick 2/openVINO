@@ -12,7 +12,7 @@ cd /opt/intel/openvino/install_dependencies
 sudo -E ./install_openvino_dependencies.sh
 
 ~$ nano ~/.bashrc
->>> source /opt/intel/openvino/bin/setupvars.sh                 #insert in bashrc file and save
+source /opt/intel/openvino/bin/setupvars.sh                     #insert in bashrc file and save
 ~$ . ~/.bashrc                                                  #reloads bashrc and open new terminal 
                                                                 # Should prompt "[setupvar.sh] OpenVINO environment initialized"
                                                               
@@ -25,9 +25,7 @@ cd /opt/intel/openvino/deployment_tools/demo
 
 ./demo_security_barrier_camera.sh                                # New window with detection result of car
 
-
-******Optional*****
-Intel® Processor Graphics (GPU)
+Intel® Processor Graphics (GPU) {OPTIONAL}
 cd /opt/intel/openvino/install_dependencies/
 sudo -E su
 ./install_NEO_OCL_driver.sh
