@@ -8,6 +8,9 @@ Daniel Jacuinde-Alvarez (CSU, Fresno) and James Dols (CSU, Fresno)
 
 Hardware Used:
 Raspberry Pi 4 4gb
+
 Pi Camera v2
+
 DTH11 or DTH22 sensor
+
 ...
