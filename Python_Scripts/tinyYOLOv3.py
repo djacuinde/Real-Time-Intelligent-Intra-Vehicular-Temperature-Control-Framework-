@@ -1,10 +1,13 @@
 ##################################START OF FILE#####################################
 
-# USAGE python detect_realtime_tinyyolo_ncs.py
-#--conf config/config.json \ --input videos/car_chase_01.mp4
+#Run the command below using Command Line using video example
+# $ python detect_realtime_tinyyolo_ncs.py --conf config/config.json --input videos/test_video.mp4
+
+#Run the command below using Command Line using pi Camera
+# $ python detect_realtime_tinyyolo_ncs.py --conf config/config.json 
 
 #Script was developed by Adrian Rosebrock from pyimagesearch
-#Modified by Daniel Jacuinde from CSU, Fresno 
+# Modified by Daniel Jacuinde from CSU, Fresno 
 
 ####################################Libraries########################################
 
@@ -191,3 +194,4 @@ vs.stop() if args["input"] is None else vs.release()
 cv2.destroyAllWindows()
 
 ###################################END OF FILE######################################
+
