@@ -6,7 +6,7 @@
 #Run the command below using Command Line using pi Camera
 # $ python detect_realtime_tinyyolo_ncs.py --conf config/config.json 
 
-#Script was developed by Adrian Rosebrock from pyimagesearch
+# Script was developed by Adrian Rosebrock
 # Modified by Daniel Jacuinde from CSU, Fresno 
 
 ####################################Libraries########################################
