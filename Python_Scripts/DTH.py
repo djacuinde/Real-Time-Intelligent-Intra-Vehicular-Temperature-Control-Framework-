@@ -4,7 +4,7 @@
 import Adafruit_DHT
 import time
 
-DHT_SENSOR = Adafruit_DHT.DHT11 #Type of sensor (DTH11 or DTH22)
+DHT_SENSOR = Adafruit_DHT.DHT22 #Type of sensor (DTH11 or DTH22)
 DHT_PIN = 4 #GPIO Pin Number
 Degree = 'F' #F = Fahrenheit, C = Celsius 
 
