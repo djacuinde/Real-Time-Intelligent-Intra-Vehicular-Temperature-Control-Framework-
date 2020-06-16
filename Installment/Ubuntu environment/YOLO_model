@@ -17,3 +17,6 @@ data/eagle.jpg, data/dog.jpg, data/person.jpg, or data/horses.jpg
 
 #change threshold prediction to 50% or higher only
 darknet $ ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg -thresh 50
+
+
+#using video camera install OpenCV(image support) and CUDA (GPU computation) 
