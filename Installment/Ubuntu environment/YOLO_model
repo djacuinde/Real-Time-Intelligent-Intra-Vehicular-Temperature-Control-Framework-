@@ -1,1 +1,19 @@
+#darknet doesnt complile with OpenCV, instead save the results in predictions.png 
 
+
+~ $git clone https://github.com/pjreddie/darknet
+~ $ cd darknet
+darknnet $ make 
+
+#download pretrained yolov3 weights
+darknet $ wget https://pjreddie.com/media/files/yolov3.weights
+
+#run command 
+darknet $ ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
+
+#other images for testing 
+data/eagle.jpg, data/dog.jpg, data/person.jpg, or data/horses.jpg 
+
+
+#change threshold prediction to 50% or higher only
+darknet $ ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg -thresh 50
