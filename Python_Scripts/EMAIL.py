@@ -1,9 +1,12 @@
 import smtplib
+from cryptography.fernet import Fernet
+
+cs = Fernet(b'BVeJdI_IyCFvwedgYx7QeCUVFiWC-cZW7pcJWpD6yo8=') #key
+ct = b'gAAAAABfDhfuj5exwWLvrXrIZWEwXsafl58DedStR7mTw_fZKdMp2jzfMQ7iY2G03jg-vXEpmKkRHGW_flv6FngfRX--o7-6Fg==' #cipher password
 
 SMTP_SERVER = 'smtp.gmail.com' #Email Server 
 SMTP_PORT = 587 #Server Port 
 GMAIL_USERNAME = 'savinglife2020fresnostate@gmail.com' #gmail account
-GMAIL_PASSWORD = '%raspberry4%'  #gmail password
 
 class Emailer:
     def sendmail(self, recipient, subject, content):
@@ -20,7 +23,7 @@ class Emailer:
         session.ehlo()
  
         #Login to Gmail
-        session.login(GMAIL_USERNAME, GMAIL_PASSWORD)
+        session.login(GMAIL_USERNAME, bytes(cs.decrypt(ct)).decode("utf-8"))
  
         #Send Email & Exit
         session.sendmail(GMAIL_USERNAME, recipient, headers + "\r\n\r\n" + content)
@@ -28,9 +31,9 @@ class Emailer:
  
 sender = Emailer()
 
-sendTo = 'anotheremail@email.com' #user account
-emailSubject = "Hello World"
-emailContent = "This is a test of my Emailer Class"
+sendTo = 'd.jacuinde96@gmail.com' #user account
+emailSubject = "PVH Prevention Service"
+emailContent = "There is an unattended PET or CHILD is your vehicle!"
 
-#Sends an email to the "sendTo" address with the specified "emailSubject" as the subject and "emailContent" as the email content.
+#Sends an email
 sender.sendmail(sendTo, emailSubject, emailContent)  
