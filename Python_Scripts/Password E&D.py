@@ -1,36 +1,37 @@
-import smtplib
+#pip3 install pycrypto
 
-SMTP_SERVER = 'smtp.gmail.com' #Email Server 
-SMTP_PORT = 587 #Server Port 
-GMAIL_USERNAME = 'savinglife2020fresnostate@gmail.com' #gmail account
-GMAIL_PASSWORD = '%raspberry4%'  #gmail password
-
-class Emailer:
-    def sendmail(self, recipient, subject, content):
-         
-        #Create Headers
-        headers = ["From: " + GMAIL_USERNAME, "Subject: " + subject, "To: " + recipient,
-                   "MIME-Version: 1.0", "Content-Type: text/html"]
-        headers = "\r\n".join(headers)
+import base64
+import hashlib
+from Crypto.Cipher import AES
+from Crypto import Random
  
-        #Connect to Gmail Server
-        session = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-        session.ehlo()
-        session.starttls()
-        session.ehlo()
+BLOCK_SIZE = 16
+pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * chr(BLOCK_SIZE - len(s) % BLOCK_SIZE)
+unpad = lambda s: s[:-ord(s[len(s) - 1:])]
  
-        #Login to Gmail
-        session.login(GMAIL_USERNAME, GMAIL_PASSWORD)
+password = input("Enter encryption password: ")
  
-        #Send Email & Exit
-        session.sendmail(GMAIL_USERNAME, recipient, headers + "\r\n\r\n" + content)
-        session.quit
  
-sender = Emailer()
-
-sendTo = 'anotheremail@email.com' #user account
-emailSubject = "Hello World"
-emailContent = "This is a test of my Emailer Class"
-
-#Sends an email to the "sendTo" address with the specified "emailSubject" as the subject and "emailContent" as the email content.
-sender.sendmail(sendTo, emailSubject, emailContent)  
+def encrypt(raw, password):
+    private_key = hashlib.sha256(password.encode("utf-8")).digest()
+    raw = pad(raw)
+    iv = Random.new().read(AES.block_size)
+    cipher = AES.new(private_key, AES.MODE_CBC, iv)
+    return base64.b64encode(iv + cipher.encrypt(raw))
+ 
+ 
+def decrypt(enc, password):
+    private_key = hashlib.sha256(password.encode("utf-8")).digest()
+    enc = base64.b64decode(enc)
+    iv = enc[:16]
+    cipher = AES.new(private_key, AES.MODE_CBC, iv)
+    return unpad(cipher.decrypt(enc[16:]))
+ 
+ 
+# First let us encrypt secret message
+encrypted = encrypt("This is a secret message", password)
+print(encrypted)
+ 
+# Let us decrypt using our original password
+decrypted = decrypt(encrypted, password)
+print(bytes.decode(decrypted))
