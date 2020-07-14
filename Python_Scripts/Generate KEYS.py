@@ -1,3 +1,4 @@
+#pip3 install crytography
 from cryptography.fernet import Fernet
 
 #Message to encrypt
