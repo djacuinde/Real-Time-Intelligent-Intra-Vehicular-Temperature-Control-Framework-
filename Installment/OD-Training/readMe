@@ -7,6 +7,8 @@ Video References
 2) https://www.youtube.com/watch?v=_4A9inxGqRM
 3) https://www.youtube.com/watch?v=zJDUhGL26iU&t=383s
 
+
+
 Installment of Git for Windows
 1) open up link https://git-scm.com/download/win
 2) Download 32 or 64-bit Windows Setup
@@ -20,3 +22,14 @@ Test Git
   command: mkdir repos 
   command: cd repos
   command: repos> git clone https://github.com/AlexeyAB/darknet.git 
+
+
+Installment of CUDA and OpenCV
+*CUDA is used for graphic card interface when training
+*OpenCV is used for realtime computation predictions for model for both training and launching model
+
+Check if your windows machine has a graphic cards by searching "device manager" 
+Select "Display Adapter" and search if NVIDIA is presented
+*Graphic card for training at the moment is NVIDIA GeForce GTX 1650 with Max-Q Design
+If graphic card is present google "CUDA wiki" and under GPUs supported search the graphic card and note Computer Capability Version
+*Our case is Version 7.5, meaing CUDA SDK 10.0/10.2 or lastest 11.0 will work
