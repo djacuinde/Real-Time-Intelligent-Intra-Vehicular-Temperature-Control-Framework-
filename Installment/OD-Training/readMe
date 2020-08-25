@@ -14,7 +14,7 @@ Installment of Git for Windows
 
 Test Git 
 1) open 
-2) Hit Windows + X then press i when open
+2) Hit Windows + X then press i when open (Opens Windows Powershell)
 3) Go to desired directory and make a new directory called "repos" 
 
   command: mkdir repos 
