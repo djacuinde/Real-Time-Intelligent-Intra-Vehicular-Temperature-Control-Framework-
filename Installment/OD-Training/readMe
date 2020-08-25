@@ -42,6 +42,7 @@ Following the window prompts until done installing
 
 Test CUDA
 1) Follow https://docs.nvidia.com/cuda/cuda-quick-start-guide/index.html
+2) Reference https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
 
 Open C: ProgramData > NVIDIA Corporation > CUDA Samples > v11.0 > 5_Simulations > nbody
 Select "nbody_vs<VS Version>" where VS Version is the version of current VS of the machine
