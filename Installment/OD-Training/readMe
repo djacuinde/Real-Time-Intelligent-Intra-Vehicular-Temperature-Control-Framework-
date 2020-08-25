@@ -1,0 +1,22 @@
+
+Windows Training!!
+
+
+Video References
+1) https://www.youtube.com/watch?v=saDipJR14Lc&t=247s 
+2) https://www.youtube.com/watch?v=_4A9inxGqRM
+3) https://www.youtube.com/watch?v=zJDUhGL26iU&t=383s
+
+Installment of Git for Windows
+1) open up link https://git-scm.com/download/win
+2) Download 32 or 64-bit Windows Setup
+3) Follow https://phoenixnap.com/kb/how-to-install-git-windows
+
+Test Git 
+1) open 
+2) Hit Windows + X then press i when open
+3) Go to desired directory and make a new directory called "repos" 
+
+  command: mkdir repos 
+  command: cd repos
+  command: repos> git clone https://github.com/AlexeyAB/darknet.git 
