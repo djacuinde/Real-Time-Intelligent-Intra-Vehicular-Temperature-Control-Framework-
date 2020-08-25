@@ -25,6 +25,8 @@ Test Git
 
 //******************************* Installment of CUDA for Windows *******************************//
 
+Requirements: Visual Studio 
+
 *CUDA is used for graphic card interface when training
 *OpenCV is used for realtime computation predictions for model for both training and launching model
 
@@ -38,6 +40,15 @@ Following the window prompts until done installing
 
 Test CUDA
 1) Follow https://docs.nvidia.com/cuda/cuda-quick-start-guide/index.html
+
+Open C: ProgramData > NVIDIA Corporation > CUDA Samples > v11.0 > 5_Simulations > nbody
+Select "nbody_vs<VS Version>" where VS Version is the version of current VS of the machine
+In VS Code, now Build > Build Solution
+When done building navigate to  C: ProgramData > NVIDIA Corporation > CUDA Samples > v11.0 > bin > win64 > Debug 
+Launch nbody.exe for CUDA testing
+
+To check CUDA version 
+  command : C: nvcc -V
 
 
 //*************************** Installment of OpenCV for Windows *******************************//
