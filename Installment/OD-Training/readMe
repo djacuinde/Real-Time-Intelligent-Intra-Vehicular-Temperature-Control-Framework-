@@ -34,5 +34,8 @@ Select "Display Adapter" and search if NVIDIA is presented
 If graphic card is present google "CUDA wiki" and under GPUs supported search the graphic card and note Computer Capability Version
 *Our case is Version 7.5, meaing CUDA SDK 10.0/10.2 or lastest 11.0 will work
 
+Test CUDA
+1) Follow https://docs.nvidia.com/cuda/cuda-quick-start-guide/index.html
+
 
 //*************************** Installment of OpenCV for Windows *******************************//
