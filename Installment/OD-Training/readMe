@@ -25,7 +25,9 @@ Test Git
 
 //******************************* Installment of CUDA for Windows *******************************//
 
-Requirements: Visual Studio 
+Requirements: 
+    Visual Studio 
+    Graphic Card 
 
 *CUDA is used for graphic card interface when training
 *OpenCV is used for realtime computation predictions for model for both training and launching model
