@@ -26,7 +26,8 @@ Test Git
 //******************************* Installment of CUDA for Windows *******************************//
 
 Requirements: 
-    Visual Studio 
+    Visual Studio
+    Python 3.7 
     Graphic Card 
 
 *CUDA is used for graphic card interface when training
@@ -55,3 +56,23 @@ To check CUDA version
 
 
 //*************************** Installment of OpenCV for Windows *******************************//
+Requirements: 
+    Python 3.7
+    pip 
+   
+ 
+Run commands on window terminal:
+
+1) pip install opencv-python 
+*Installs opnCV and numpy
+
+2) python
+*launchs python on terminal
+
+3) >> import cv2
+*If error then openCV was not install properly
+
+4) >> print(cv2.__version__)
+*Should print out version of openCV in the mahcine
+    
+    
