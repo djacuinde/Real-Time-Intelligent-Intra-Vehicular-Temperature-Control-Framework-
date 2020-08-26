@@ -46,7 +46,8 @@ Requirements:________
 *Select "Display Adapter" and search if NVIDIA is presented
 **Graphic card for training at the moment is NVIDIA GeForce GTX 1650 with Max-Q Design
 
-*If graphic card is present google "CUDA wiki" and under GPUs supported search the graphic card and note Computer Capability Version
+*If graphic card is present google "CUDA wiki" and under GPUs supported search the graphic
+*Note Computer Capability Version of the graphic card
 **Our case is Version 7.5, meaing CUDA SDK 10.0/10.2 or lastest 11.0 will work
 
 *Search "CUDA <Version>" and download with settings: Windows + x86_64 + Version 10
