@@ -81,20 +81,20 @@ Requirements:________
    
 Run commands on window terminal:
 
-1) pip install opencv-python 
+1) command: pip install opencv-python 
 *Installs opnCV and numpy
 
 
 Test OpenCV:____________
 
-1) python
+1) command: python
 *launchs python on terminal
 
-2) >> import cv2
+2) python: >> import cv2
 *If error then openCV was not install properly
 **Follow https://www.youtube.com/watch?v=_fqpYLM6SCw&t=1s to build OpenCV from Source
 
-3) >> print(cv2.__version__)
+3) python: >> print(cv2.__version__)
 *Should print out version of openCV in the mahcine
     
     
