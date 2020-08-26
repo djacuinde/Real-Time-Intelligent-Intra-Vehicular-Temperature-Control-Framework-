@@ -8,71 +8,92 @@ Windows YOLO Training!!
 3) https://www.youtube.com/watch?v=zJDUhGL26iU&t=383s
 
 
-//********************************* Installment of Git for Windows *******************************//
-1) open up link https://git-scm.com/download/win
+//********************************* Installment of Git and Darknet for Windows *******************************//
+1) open up link:   https://git-scm.com/download/win
 2) Download 32 or 64-bit Windows Setup
-3) Follow https://phoenixnap.com/kb/how-to-install-git-windows
+3) Follow to install setup:   https://phoenixnap.com/kb/how-to-install-git-windows
+*Gits default editor is user chose
 
-Test Git 
-1) open 
-2) Hit Windows + X then press i when open (Opens Windows Powershell)
-3) Go to desired directory and make a new directory called "repos" 
+Test Git:________________ 
+1) In homepage click Windows Key + x then press i when open 
+*Launches Windows Powershell
 
-  command: mkdir repos 
-  command: cd repos
-  command: repos> git clone https://github.com/AlexeyAB/darknet.git 
+2) Go to desired directory and make a new directory called "repos" 
+
+3)command: mkdir repos 
+*Build a new folder named "repos" in the directory location
+
+4)command: cd repos
+*Enter the folder named "repos"
+
+5)command: repos> git clone https://github.com/AlexeyAB/darknet.git 
+*Download the darknet github files to repos folder
 
 
 //******************************* Installment of CUDA for Windows *******************************//
 
-Requirements: 
+Requirements:________
     Visual Studio
     Python 3.7 
-    Graphic Card 
+    Graphic Card
+    *********** If not grphic card then skip this installment ******************
 
-*CUDA is used for graphic card interface when training
-*OpenCV is used for realtime computation predictions for model for both training and launching model
+*CUDA is used for graphic card interface when training and/or launcihng model
+*OpenCV is used for realtime computation predictions for models for both training and launching model
 
-Check if your windows machine has a graphic cards by searching "device manager" 
-Select "Display Adapter" and search if NVIDIA is presented
-*Graphic card for training at the moment is NVIDIA GeForce GTX 1650 with Max-Q Design
-If graphic card is present google "CUDA wiki" and under GPUs supported search the graphic card and note Computer Capability Version
-*Our case is Version 7.5, meaing CUDA SDK 10.0/10.2 or lastest 11.0 will work
-Search "CUDA <Version>" and download with settings: Windows + x86_64 + Version 10
-Following the window prompts until done installing
+*Check if your windows machine has a graphic cards by searching "device manager" 
+*Select "Display Adapter" and search if NVIDIA is presented
+**Graphic card for training at the moment is NVIDIA GeForce GTX 1650 with Max-Q Design
 
-Test CUDA
+*If graphic card is present google "CUDA wiki" and under GPUs supported search the graphic card and note Computer Capability Version
+**Our case is Version 7.5, meaing CUDA SDK 10.0/10.2 or lastest 11.0 will work
+
+*Search "CUDA <Version>" and download with settings: Windows + x86_64 + Version 10
+*Following the window prompts until done installing
+
+Test CUDA:____________
 1) Follow https://docs.nvidia.com/cuda/cuda-quick-start-guide/index.html
 2) Reference https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
 
-Open C: ProgramData > NVIDIA Corporation > CUDA Samples > v11.0 > 5_Simulations > nbody
-Select "nbody_vs<VS Version>" where VS Version is the version of current VS of the machine
-In VS Code, now Build > Build Solution
-When done building navigate to  C: ProgramData > NVIDIA Corporation > CUDA Samples > v11.0 > bin > win64 > Debug 
-Launch nbody.exe for CUDA testing
 
-To check CUDA version 
-  command : C: nvcc -V
+OR 
+
+1) Open C: ProgramData > NVIDIA Corporation > CUDA Samples > v11.0 > 5_Simulations > nbody
+
+2) Select "nbody_vs<VS Version>" where VS Version is the version of current VS of the machine
+
+3) In VS Code, now Build > Build Solution
+
+4) When done building navigate to  C: ProgramData > NVIDIA Corporation > CUDA Samples > v11.0 > bin > win64 > Debug 
+
+5) Launch nbody.exe for CUDA testing
+*Launches CUDA example video
+
+6)To check CUDA version 
+6.1) command: C: nvcc -V
 
 
 //*************************** Installment of OpenCV for Windows *******************************//
-Requirements: 
+Requirements:________ 
     Python 3.7
     pip 
    
- 
 Run commands on window terminal:
 
 1) pip install opencv-python 
 *Installs opnCV and numpy
 
-2) python
+
+Test OpenCV:____________
+
+1) python
 *launchs python on terminal
 
-3) >> import cv2
+2) >> import cv2
 *If error then openCV was not install properly
+**Follow https://www.youtube.com/watch?v=_fqpYLM6SCw&t=1s to build OpenCV from Source
 
-4) >> print(cv2.__version__)
+3) >> print(cv2.__version__)
 *Should print out version of openCV in the mahcine
     
     
