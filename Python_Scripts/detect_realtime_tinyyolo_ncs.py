@@ -1,4 +1,8 @@
-##################################START OF FILE#####################################
+##################################START OF FILE##################################### 
+# $ workon opencv
+# $ source ~/openvino/bin/setupvars.sh
+# $ cd Desktop/tiny-yolo-ncs/
+
 
 #Run the command below using Command Line using video example
 # $ python detect_realtime_tinyyolo_ncs.py --conf config/config.json --input videos/test_video.mp4
