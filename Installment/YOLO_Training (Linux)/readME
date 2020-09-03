@@ -45,9 +45,17 @@ Install
 ##### END OF Other Optional Dependecies #####
 
 :~Code $ git clone https://github.com/opencv/opencv.git
-:~Code $ mkdir build
-:~Code $ cd build
-:~Code/build $ cmake ../
-#Outputs the machine python interpreters
-:~Code/build $ make
+:~Code $ cd opencv
+:~Code/opencv $ mkdir build
+:~Code/opencv $ cd build
+:~Code/opencv/build $ cmake ../
+#Outputs the machine python interpreters and other cmake stats
+:~Code/opencv/build $ make
 #OUTPUT: "sudo make install"
+
+
+:~ $ python 
+>> import cv2
+#If unable, make sure to add path to environment 
+>> print(cv2.__version__)
+#Outputs cv2 version on the machine, opencv works!
