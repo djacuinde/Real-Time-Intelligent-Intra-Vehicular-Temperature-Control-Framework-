@@ -61,8 +61,8 @@
 :~Code/opencv/build $ sudo make install 
 #install the compiled source files
 
-:~ $ python 
+:~ $ python3 
 >> import cv2
-#If unable, make sure to add opencv path to environment 
+#If unable, make sure opencv path is added to environment 
 >> print(cv2.__version__)
 #Outputs cv2 version on the machine, opencv works!
