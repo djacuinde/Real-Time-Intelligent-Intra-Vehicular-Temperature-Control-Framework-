@@ -1,1 +1,16 @@
-f
+Update 16.04 Ubuntu by running
+
+:~ $ sudo apt-get update
+:~ $ sudo apt-get upgrade
+
+Install PIP by running 
+:~ $ sudo apt-get -y install python3-pip
+:~ $ pip3 install --upgrade pip
+
+Install CMAKE by running 
+:~ $ sudo apt-get -y install cmake
+:~ $ cmake --version 
+
+
+Install darknet by running
+:~ $
