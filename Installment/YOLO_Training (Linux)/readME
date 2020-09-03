@@ -19,16 +19,6 @@
 :~ $ sudo apt-get -y install cmake
 :~ $ cmake --version 
 
-//********************************* Install darknet using source by running *******************************//
-:~Code $ git clone https://github.com/pjreddie/darknet.git
-:~Code $ cd darknet
-
-:~Code/darknet $ make
-# Let BUILD darknet source files!
-
-:~Code/darknet $./darknet
-# OUTPUT: " usage: ./darknet <function>" meaning works!
-
 //********************************* Install OpenCV using source by running *******************************//
 :~ $ sudo apt-get install cmake
 :~ $ sudo apt-get install gcc g++
@@ -66,3 +56,17 @@
 #If unable, make sure opencv path is added to environment 
 >> print(cv2.__version__)
 #Outputs cv2 version on the machine, opencv works!
+
+//********************************* Install darknet using source by running *******************************//
+:~Code $ git clone https://github.com/pjreddie/darknet.git
+:~Code $ cd darknet
+
+##### OPEN darknet's MakeFile and edit "OPENCV = 1" of top of file #####
+
+:~Code/darknet $ make
+# Let BUILD darknet source files!
+
+:~Code/darknet $./darknet
+# OUTPUT: " usage: ./darknet <function>" meaning works!
+
+
