@@ -1,5 +1,4 @@
 Update 16.04 Ubuntu by running
-
 :~ $ sudo apt-get update
 :~ $ sudo apt-get upgrade
 
