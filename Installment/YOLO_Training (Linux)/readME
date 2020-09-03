@@ -1,32 +1,35 @@
-##### Entire source codes are in direcoty : ~Desktop/Code/  #####
+##### Entire source code are in direcoty : ~Desktop/Code/  #####
 
-Update 16.04 Ubuntu by running
+
+//********************************* Update 16.04 Ubuntu by running *******************************//
 :~ $ sudo apt-get update
 :~ $ sudo apt-get upgrade
 
-Install PIP by running 
+//********************************* Install PIP by running  *******************************//
 :~ $ sudo apt-get -y install python3-pip
 :~ $ pip3 install --upgrade pip
 :~ $ pip3 --version
 
-Install GIT by running 
+//********************************* Install GIT by running *******************************//
 :~ $ sudo apt-get -y install git
 :~ $ git --version
 
-Install CMAKE by running 
+
+//********************************* Install CMAKE by running *******************************//
 :~ $ sudo apt-get -y install cmake
 :~ $ cmake --version 
 
-
-Install darknet by running
+//********************************* Install darknet using source by running *******************************//
 :~Code $ git clone https://github.com/pjreddie/darknet.git
 :~Code $ cd darknet
+
 :~Code/darknet $ make
 # Let BUILD darknet source files!
+
 :~Code/darknet $./darknet
 # OUTPUT: " usage: ./darknet <function>" meaning works!
 
-Install
+//********************************* Install OpenCV using source by running *******************************//
 :~ $ sudo apt-get install cmake
 :~ $ sudo apt-get install gcc g++
 
@@ -48,11 +51,15 @@ Install
 :~Code $ cd opencv
 :~Code/opencv $ mkdir build
 :~Code/opencv $ cd build
+
 :~Code/opencv/build $ cmake ../
 #Outputs the machine python interpreters and other cmake stats
-:~Code/opencv/build $ make
-#OUTPUT: "sudo make install"
 
+:~Code/opencv/build $ make
+#build the opencv files
+
+:~Code/opencv/build $ sudo make install 
+#install the compiled source files
 
 :~ $ python 
 >> import cv2
