@@ -17,4 +17,9 @@ Install CMAKE by running
 
 
 Install darknet by running
-:~ $
+:~ $ git clone https://github.com/pjreddie/darknet.git
+:~ $ cd darknet
+:~ $ make
+# Let BUILD!
+:~ $./darknet
+# OUTPUT: " usage: ./darknet <function>"
