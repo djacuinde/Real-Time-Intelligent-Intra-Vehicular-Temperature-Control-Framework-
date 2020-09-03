@@ -63,6 +63,6 @@
 
 :~ $ python 
 >> import cv2
-#If unable, make sure to add path to environment 
+#If unable, make sure to add opencv path to environment 
 >> print(cv2.__version__)
 #Outputs cv2 version on the machine, opencv works!
