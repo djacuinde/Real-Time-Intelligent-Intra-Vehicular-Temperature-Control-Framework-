@@ -8,7 +8,7 @@ Install PIP by running
 :~ $ pip --version
 
 Install GIT by running 
-:~ $ sudo apt-get install git
+:~ $ sudo apt-get -y install git
 :~ $ git --version
 
 Install CMAKE by running 
