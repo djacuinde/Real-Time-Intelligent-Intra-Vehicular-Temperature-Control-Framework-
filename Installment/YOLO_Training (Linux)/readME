@@ -77,6 +77,8 @@ Open "CMakeLists.txt" and search for "OPENCV_GENERATE_PKGCONFIG" and insert to "
 :~Code/opencv/build $ sudo make install 
 #install the compiled source files
 
+:~Code/opencv/build $ sudo apt-get install libopencv-dev
+
 :~ $ python3 
 >> import cv2
 #If unable, make sure opencv path is added to environment by VIM 
