@@ -43,12 +43,15 @@
 ##### END OF Other Optional Dependecies #####
 
 :~Code $ git clone https://github.com/opencv/opencv.git
+:~Code $ git clone https://github.com/opencv/opencv_contrib.git
 :~Code $ cd opencv
 :~Code/opencv $ mkdir build
 :~Code/opencv $ cd build
 
 :~Code/opencv/build $ cmake ../
 #Outputs the machine python interpreters and other cmake stats
+
+cmake -D CMAKE_BUILD_TYPE=Release -D OPENCV_GENERATE_PKGCONFIG=ON -D OPENCV_EXTRA_MODULES_PATH=~/Desktop/Code/opencv_contrib/modules -D CMAKE_INSTALL_PREFIX=~/Desktop/Code/opencv
 
 :~Code/opencv/build $ make
 #build the opencv files
