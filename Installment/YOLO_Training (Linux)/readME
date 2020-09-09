@@ -113,3 +113,5 @@ e.g. :~Code/darknet $ ./darknet detect cfg/yolov3-tiny.cfg yolov3-tiny.weights d
 #Outputs the prediction made in image "dog.jpg" and its saved under predictions.png 
 #Other images: data/eagle.jpg, data/dog.jpg, data/person.jpg, or data/horses.jpg
 
+#Change threshold of predictions (-thresh <value> )
+:~Code/darknet $ ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg -thresh 0 
