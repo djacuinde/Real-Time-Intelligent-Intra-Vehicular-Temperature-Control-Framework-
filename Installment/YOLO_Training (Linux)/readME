@@ -103,4 +103,10 @@ Open "CMakeLists.txt" and search for "OPENCV_GENERATE_PKGCONFIG" and set paramet
 :~Code/darknet $./darknet
 # OUTPUT: " usage: ./darknet <function>" meaning works!
 
+# Download the weight file of the desired YOLO model by the link: https://pjreddie.com/darknet/yolo/ 
+# Once downloaded, move the weight file to darknet source directory (:~Code/darknet)
+
+#Run Detector
+:~Code/darknet $ ./darknet detect cfg/<Model.cfg> <Model.weights> data/<Image to Test>
+e.g. :~Code/darknet $ ./darknet detect cfg/yolov3-tiny.cfg yolov3-tiny.weights data/dog.jpg 
 
