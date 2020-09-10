@@ -120,3 +120,46 @@ e.g. :~Code/darknet $ ./darknet detect cfg/yolov3-tiny.cfg yolov3-tiny.weights d
 #Live Video Camera
 ##### recommended to have both CUDA and OpenCV #####
 :~Code/darknet $ ./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolov3.weights
+
+
+//********************************* Training YOLO model *******************************//
+
+//**** COCO dataset *****//
+#Get COCO dataset "train2014.zip"
+:~Code/darknet $ cp scripts/get_coco_dataset.sh data
+:~Code/darknet $ cd data
+:~Code/darknet/data $ bash get_coco_dataset.sh
+
+#Modify cfg/coco.data file 
+ 1 classes= 80
+ 2 train  = <path-to-coco>/trainvalno5k.txt
+ 3 valid  = <path-to-coco>/5k.txt
+ 4 names = data/coco.names
+ 5 backup = backup
+ 
+ #Modify cfg/<yolo model>.cfg file 
+ [net]
+  # Testing
+  # batch=1
+  # subdivisions=1
+  # Training
+  batch=64
+  subdivisions=8
+  ....
+  
+  
+//**** Custom dataset *****//
+ format: <object-class> <x> <y> <width> <height>
+  
+  
+//**** Training *****//
+  #Download the convolutional weights
+  https://github.com/AlexeyAB/darknet/blob/57e878b4f9512cf9995ff6b5cd6e0d7dc1da9eaf/build/darknet/x64/partial.cmd#L24 
+  or by https://pjreddie.com/darknet/yolo/
+  
+#Train 
+./darknet detector train cfg/<dataset>.data cfg/<yolo model>.cfg <conv weights> 
+e.g.  :~Code/darknet $ ./darknet detector train cfg/coco.data cfg/yolov3.cfg yolov3-tiny.conv.15
+
+#Stop or Restart Training from checkpoint
+./darknet detector train cfg/coco.data cfg/yolov3.cfg backup/yolov3.backup
