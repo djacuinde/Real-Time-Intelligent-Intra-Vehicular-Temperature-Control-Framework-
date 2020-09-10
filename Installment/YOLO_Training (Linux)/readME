@@ -90,7 +90,8 @@ Open "CMakeLists.txt" and search for "OPENCV_GENERATE_PKGCONFIG" and set paramet
 #Outputs cv2 version on the machine, opencv works!
 
 //********************************* Install darknet using source by running *******************************//
-:~Code $ git clone https://github.com/pjreddie/darknet.git
+:~Code $ git clone https://github.com/AlexeyAB/darknet.git
+#For some reason darknet from https://github.com/pjreddie/darknet.git has conv. segment faults when executing. 
 :~Code $ cd darknet
 
 ##
@@ -108,10 +109,14 @@ Open "CMakeLists.txt" and search for "OPENCV_GENERATE_PKGCONFIG" and set paramet
 
 #Run Detector
 :~Code/darknet $ ./darknet detect cfg/<Model.cfg> <Model.weights> data/<Image to Test>
-e.g. :~Code/darknet $ ./darknet detect cfg/yolov3-tiny.cfg yolov3-tiny.weights data/dog.jpg 
+e.g. :~Code/darknet $ ./darknet detect cfg/yolov3-tiny.cfg yolov3-tiny.weights data/dog.jpresh  
 
 #Outputs the prediction made in image "dog.jpg" and its saved under predictions.png 
-#Other images: data/eagle.jpg, data/dog.jpg, data/person.jpg, or data/horses.jpg
+#Other input test images: data/eagle.jpg, data/dog.jpg, data/person.jpg, or data/horses.jpg
 
 #Change threshold of predictions (-thresh <value> )
 :~Code/darknet $ ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg -thresh 0 
+
+#Live Video Camera
+##### recommended to have both CUDA and OpenCV #####
+:~Code/darknet $ ./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolov3.weights
