@@ -23,6 +23,8 @@
   
   
 //**** Custom dataset *****//
+:~  $ wget clone https://github.com/theAIGuysCode/OIDv4_ToolKit.git
+
  format: <object-class> <x> <y> <width> <height>
   
   
