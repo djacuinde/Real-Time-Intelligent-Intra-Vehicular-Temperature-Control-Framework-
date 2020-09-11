@@ -114,12 +114,19 @@ e.g. :~Code/darknet $ ./darknet detect cfg/yolov3-tiny.cfg yolov3-tiny.weights d
 #Outputs the prediction made in image "dog.jpg" and its saved under predictions.png 
 #Other input test images: data/eagle.jpg, data/dog.jpg, data/person.jpg, or data/horses.jpg
 
+#Run Detector on Video
+:~Code/darknet $ ./darknet detector demo cfg/<Model.cfg> <Model.weights> data/<Image to Test>
+
 #Change threshold of predictions (-thresh <value> )
-:~Code/darknet $ ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg -thresh 0 
+:~Code/darknet $ ./darknet detect cfg/<data set.data> cfg/<Model.cfg> <Model.weights> -ext_output <Video> -out_filenmae VideoResults.avi
+e.g.:~Code/darknet $ ./darknet detect cfg/coco.data cfg/yolov3.cfg yolov3.weights -ext_output test/video.mp4 -out_filenmae VideoResults.avi
+
 
 #Live Video Camera
 ##### recommended to have both CUDA and OpenCV #####
-:~Code/darknet $ ./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolov3.weights
+#:~Code/darknet $ ./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolov3.weights
+
+
 
 
 //********************************* Training YOLO model *******************************//
