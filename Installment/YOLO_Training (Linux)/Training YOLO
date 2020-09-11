@@ -23,7 +23,19 @@
   
   
 //**** Custom dataset *****//
-:~  $ git clone https://github.com/theAIGuysCode/OIDv4_ToolKit.git
+:~Code/  $ git clone https://github.com/theAIGuysCode/OIDv4_ToolKit.git
+:~Code/  $ cd OIDv4_ToolKit
+
+:~Code/OIDv4_ToolKit  $ pip3 install -r requirements.txt     
+ #Run with python3
+ 
+:~Code/OIDv4_ToolKit  $ python3 main.py downloader --classes <Desired images to download based on class> --type_csv train --limit <# of images to download>
+e.g. :~Code/OIDv4_ToolKit  $ python3 main.py downloader --classes Balloon Airplane --type_csv train --limit 1
+     # One Image of Ballon and Airplane will be downloaded ONLY 
+# Select YES for class-descriptions-boxable.csv and train-annotations-bbox.csv files 
+ 
+
+
 
  format: <object-class> <x> <y> <width> <height>
   
