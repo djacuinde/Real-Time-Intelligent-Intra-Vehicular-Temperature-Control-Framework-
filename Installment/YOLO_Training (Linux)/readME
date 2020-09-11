@@ -119,7 +119,8 @@ e.g. :~Code/darknet $ ./darknet detect cfg/yolov3-tiny.cfg yolov3-tiny.weights d
 
 #Change threshold of predictions (-thresh <value> )
 :~Code/darknet $ ./darknet detect cfg/<data set.data> cfg/<Model.cfg> <Model.weights> -ext_output <Video> -out_filenmae VideoResults.avi
-e.g.:~Code/darknet $ ./darknet detect cfg/coco.data cfg/yolov3.cfg yolov3.weights -ext_output test/video.mp4 -out_filenmae VideoResults.avi
+# e.g.:~Code/darknet $ ./darknet detect cfg/coco.data cfg/yolov3.cfg yolov3.weights -ext_output test/video.mp4 -out_filenmae VideoResults.avi
+# Open VideoResults.avi to show the object detection in real time
 
 
 #Live Video Camera
