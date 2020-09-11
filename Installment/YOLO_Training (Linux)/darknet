@@ -1,0 +1,32 @@
+
+:~Code $ git clone https://github.com/AlexeyAB/darknet.git
+#For some reason darknet from https://github.com/pjreddie/darknet.git has conv. segment faults when executing. 
+
+:~Code $ cd darknet
+
+##
+##### OPEN darknet's MakeFile and edit "OPENCV = 1" of top of file then SAVE #####
+##
+
+:~Code/darknet $ make
+# Let BUILD darknet source files!
+
+:~Code/darknet $./darknet
+# OUTPUT: " usage: ./darknet <function>" meaning build sucessful!
+
+# Download the weight file of the desired YOLO model by the link: https://pjreddie.com/darknet/yolo/ 
+# Once downloaded, move the weight file to darknet source directory (:~Code/darknet)
+
+#Run Detector
+:~Code/darknet $ ./darknet detect cfg/<Model.cfg> <Model.weights> data/<Image to Test>
+e.g. :~Code/darknet $ ./darknet detect cfg/yolov3-tiny.cfg yolov3-tiny.weights data/dog.jpg  
+#Outputs the prediction made in image "dog.jpg" and its saved under predictions.png 
+#Other input test images: data/eagle.jpg, data/dog.jpg, data/person.jpg, or data/horses.jpg
+
+#Run Detector on Video
+:~Code/darknet $ ./darknet detect cfg/<data set.data> cfg/<Model.cfg> <Model.weights> -ext_output <Video> -out_filenmae VideoResults.avi
+# e.g.:~Code/darknet $ ./darknet detect cfg/coco.data cfg/yolov3.cfg yolov3.weights -ext_output test/video.mp4 -out_filenmae VideoResults.avi
+# Open VideoResults.avi to show the object detection in real time
+
+#Change threshold of predictions (-thresh <value> , where value is between 0 to 1 (0% to 100%))
+:~Code/darknet $ ./darknet detect cfg/yolov3-tiny.cfg yolov3-tiny.weights data/dog.jpg  -thresh 0.5
