@@ -29,14 +29,14 @@ Link: https://github.com/theAIGuysCode/OIDv4_ToolKit
 :~Code/  $ cd OIDv4_ToolKit
 
 :~Code/OIDv4_ToolKit  $ pip3 install -r requirements.txt     
- #Run with python3
+ #Run with python3 if failed for pip
  
 # Will use Open Images Dataset to download custom dataset
 # https://storage.googleapis.com/openimages/web/visualizer/index.html?set=train&type=detection&c=%2Fm%2F0bt9lr 
 
-:~Code/OIDv4_ToolKit  $ python3 main.py downloader --classes <Class Names > --type_csv train --limit <# of images to download per class>
-e.g. :~Code/OIDv4_ToolKit  $ python3 main.py downloader --classes Balloon Airplane --type_csv train --limit 1
-     # One Image of Ballon and Airplane will be downloaded ONLY 
+:~Code/OIDv4_ToolKit  $ python main.py downloader --classes <Class Names > --type_csv train --limit <# of images to download per class>
+e.g. :~Code/OIDv4_ToolKit  $ python main.py downloader --classes Person Dog Cat --type_csv train --limit 1
+     # Downloads (--limit #) of images for classes Person, Dog, and Cat
 # Select YES for class-descriptions-boxable.csv and train-annotations-bbox.csv files 
  
 
