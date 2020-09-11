@@ -1,4 +1,6 @@
-//**** COCO dataset *****//
+//**** COCO dataset (Linux)*****//
+ 
+
 #Get COCO dataset "train2014.zip"
 :~Code/darknet $ cp scripts/get_coco_dataset.sh data
 :~Code/darknet $ cd data
@@ -22,7 +24,11 @@
   ....
   
   
-//**** Custom dataset *****//
+  
+  
+  
+//**** Custom dataset (Windows) *****//
+
 Link: https://github.com/theAIGuysCode/OIDv4_ToolKit
 
 :~Code/  $ git clone https://github.com/theAIGuysCode/OIDv4_ToolKit.git
@@ -38,11 +44,11 @@ Link: https://github.com/theAIGuysCode/OIDv4_ToolKit
 e.g. :~Code/OIDv4_ToolKit  $ python main.py downloader --classes Person Dog Cat --type_csv train --limit 1
      # Downloads (--limit #) of images for classes Person, Dog, and Cat
 # Select YES for class-descriptions-boxable.csv and train-annotations-bbox.csv files 
- 
-
-
 
  format: <object-class> <x> <y> <width> <height>
+  
+  
+  
   
   
 //**** Training *****//
