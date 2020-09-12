@@ -1,0 +1,22 @@
+
+#Get COCO dataset "train2014.zip"
+:~Code/darknet $ cp scripts/get_coco_dataset.sh data
+:~Code/darknet $ cd data
+:~Code/darknet/data $ bash get_coco_dataset.sh
+
+#Modify cfg/coco.data file 
+ 1 classes= 80
+ 2 train  = <path-to-coco>/trainvalno5k.txt
+ 3 valid  = <path-to-coco>/5k.txt
+ 4 names = data/coco.names
+ 5 backup = backup
+ 
+ #Modify cfg/<yolo model>.cfg file 
+ [net]
+  # Testing
+  # batch=1
+  # subdivisions=1
+  # Training
+  batch=64
+  subdivisions=8
+  ....
