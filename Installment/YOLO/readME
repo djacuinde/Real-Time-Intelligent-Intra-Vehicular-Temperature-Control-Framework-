@@ -1,3 +1,9 @@
+1) Install all dependancies from "Downloads" 
+2) Install OpenCV
+3) Install darknet
+4) Download desired dataset
+5) Train YOLO model
+6) Deploy model
 
 ##### Entire source code are in directory : ~Desktop/Code/  #####
 ##### ~/CODE/opencv
