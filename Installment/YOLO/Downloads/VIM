@@ -1,0 +1,15 @@
+
+:~ $ sudo apt search vim
+:~ $ sudo apt-get -y install vim
+:~ $ vim --version
+
+######## COMMANDS: ###########
+save: :w
+save and exit: :wq
+exit: :q
+force: ! (example :w! :q!)
+copy: y
+copy a line: yy
+paste: p
+cut: d
+cut a line: dd
