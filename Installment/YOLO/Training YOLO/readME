@@ -1,11 +1,11 @@
 
-#Download the convolutional weights
+# Download the convolutional weights
 https://github.com/AlexeyAB/darknet/blob/57e878b4f9512cf9995ff6b5cd6e0d7dc1da9eaf/build/darknet/x64/partial.cmd#L24 
 or by https://pjreddie.com/darknet/yolo/
-  
-#Train 
+   
+# Train 
 ./darknet detector train cfg/<dataset>.data cfg/<yolo model>.cfg <conv weights> 
 e.g.  :~Code/darknet $ ./darknet detector train cfg/coco.data cfg/yolov3.cfg yolov3-tiny.conv.15
 
-#Stop or Restart Training from checkpoint
+# Stop or Restart Training from checkpoint
 ./darknet detector train cfg/coco.data cfg/yolov3.cfg backup/yolov3.backup
