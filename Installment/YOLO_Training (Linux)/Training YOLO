@@ -45,7 +45,19 @@ e.g. :~Code/OIDv4_ToolKit  $ python main.py downloader --classes Person Dog Cat 
      # Downloads (--limit #) of images for classes Person, Dog, and Cat
 # Select YES for class-descriptions-boxable.csv and train-annotations-bbox.csv files 
 
- format: <object-class> <x> <y> <width> <height>
+#OIDv4 Toolkit will give the label in format : <Class> <Xmin> <Ymin> <Xmax> <Ymax>
+#YOLO takes in <Class> <Xmin> <Xmax> <Ymin> <Ymax>, which can be done by:
+  
+  1) In OIDv4_Toolkit, search and open "classes.txt" 
+     #Replace text with the class name of the downloaded data
+        #e.g. Downloaded Person, Dog, and Cat classes
+        # so, in the .txt, it contains the contents (single class per line):  
+              Person
+              Dog
+              Cat 
+   2) run command :~Code/OIDv4_ToolKit $ python convert_annotations.py 
+      #We convert labels format to YOLO format
+                                   
   
   
   
