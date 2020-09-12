@@ -1,3 +1,0 @@
-#Check python x32 or x64 
->> import struct
->> print(struct.calcsize("P") * 8)
