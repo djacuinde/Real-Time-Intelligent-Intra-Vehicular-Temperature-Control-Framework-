@@ -1,0 +1,32 @@
+Link to Toolkit : https://github.com/theAIGuysCode/OIDv4_ToolKit
+
+# Will use Open Images Dataset to download custom dataset
+# https://storage.googleapis.com/openimages/web/visualizer/index.html?set=train&type=detection&c=%2Fm%2F0bt9lr 
+
+
+
+
+:~Code/  $ git clone https://github.com/theAIGuysCode/OIDv4_ToolKit.git
+:~Code/  $ cd OIDv4_ToolKit
+
+:~Code/OIDv4_ToolKit  $ pip3 install -r requirements.txt     
+ #Run with python3 if failed for pip
+ 
+:~Code/OIDv4_ToolKit  $ python main.py downloader --classes <Class Names > --type_csv train --limit <# of images to download per class>
+e.g. :~Code/OIDv4_ToolKit  $ python main.py downloader --classes Person Dog Cat --type_csv train --limit 2000
+     # Downloads 2000 images for classes: Person, Dog, and Cat
+# Select YES for class-descriptions-boxable.csv and train-annotations-bbox.csv files 
+
+#OIDv4 Toolkit will give the label in format : <Class> <Xmin> <Ymin> <Xmax> <Ymax>
+#YOLO takes in <Class> <Xmin> <Xmax> <Ymin> <Ymax>, convetion is done by:
+  
+  1) In OIDv4_Toolkit, search and open "classes.txt" 
+     #Replace text with the class name of the downloaded data
+        #e.g. Downloaded Person, Dog, and Cat classes, so in the .txt it contains the contents (single class per line):  
+        
+              Person
+              Dog
+              Cat 
+              
+   2) run command :~Code/OIDv4_ToolKit $ python convert_annotations.py 
+      #Convert current labels format to YOLO format
