@@ -3,7 +3,10 @@ Link to Toolkit : https://github.com/theAIGuysCode/OIDv4_ToolKit
 # Will use Open Images Dataset to download custom dataset
 # https://storage.googleapis.com/openimages/web/visualizer/index.html?set=train&type=detection&c=%2Fm%2F0bt9lr 
 
+
+*******************************************************
 **** NOTE: This toolkit working ONLY on python x64 ****
+*******************************************************
 
 
 :~Code/  $ git clone https://github.com/theAIGuysCode/OIDv4_ToolKit.git
