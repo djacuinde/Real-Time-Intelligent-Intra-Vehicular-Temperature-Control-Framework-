@@ -15,9 +15,9 @@ Link to Toolkit : https://github.com/theAIGuysCode/OIDv4_ToolKit
 :~Code/OIDv4_ToolKit  $ pip3 install -r requirements.txt     
  #Run with python3 if failed for pip
  
-:~Code/OIDv4_ToolKit  $ python main.py downloader --classes <Class Names > --type_csv train --limit <# of images to download per class>
-e.g. :~Code/OIDv4_ToolKit  $ python main.py downloader --classes Person Dog Cat --type_csv train --limit 2000
-     # Downloads 2000 images for classes: Person, Dog, and Cat
+:~Code/OIDv4_ToolKit  $ python main.py downloader --classes <Class Names > --type_csv train --limit <# of images to download per class> --multiclasses 1
+e.g. :~Code/OIDv4_ToolKit  $ python main.py downloader --classes Person Dog Cat --type_csv train --limit 30000 --multiclasses 1
+     # Downloads 30000 images for classes: Person, Dog, and Cat
 # Select YES for class-descriptions-boxable.csv and train-annotations-bbox.csv files 
 
 #OIDv4 Toolkit will give the label in format : <Class> <Xmin> <Ymin> <Xmax> <Ymax>
