@@ -32,4 +32,4 @@ e.g. :~Code/OIDv4_ToolKit  $ python main.py downloader --classes Person Dog Cat 
               Cat 
               
    2) run command :~Code/OIDv4_ToolKit $ python convert_annotations.py 
-      #Convert current labels format to YOLO format
+      #Convert current labels format to YOLO format and READY for training now!
