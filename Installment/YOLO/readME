@@ -1,3 +1,12 @@
+# Linux (Ubuntu) will be used for most of project
+#Depending on the desired dataset 
+    #COCO will use linux 
+    #Custom dataset will use Windows or Linux if python x64 is been ran
+    
+    
+#### Will recommend to have over 100 Gb memory if training ####
+
+
 1) Install all dependancies from "Downloads" 
 2) Install OpenCV
 3) Install darknet
@@ -7,5 +16,4 @@
 
 ##### Entire source code are in directory : ~Desktop/Code/  #####
 ##### ~/CODE/opencv
-##### ~/CODE/opencv_contrib
 ##### ~/CODE/darknet
