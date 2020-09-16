@@ -39,7 +39,6 @@ class Notification:
             
             #Login to Gmail
             session.login(GMAIL_USERNAME, bytes(cs.decrypt(ct)).decode("utf-8"))
-            #session.login('d.jacuinde96@gmail.com', 'Greenship_582.')
      
             #Send Email & SMS then Exit
             session.sendmail(GMAIL_USERNAME, RECIPIENT , headers + "\r\n\r\n" + MESSAGE) #email
