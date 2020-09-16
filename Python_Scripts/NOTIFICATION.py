@@ -4,7 +4,7 @@ import smtplib
 from cryptography.fernet import Fernet
 
 #EMAIL_PASSWORD key
-cs = Fernet(b'HqiwPbvnbVK5Yshgop7xOKxLCFyiPaF6qFSjxW4i2DM=')
+ck = Fernet(b'HqiwPbvnbVK5Yshgop7xOKxLCFyiPaF6qFSjxW4i2DM=')
 #EMAIL_PASSWORD cipher password
 ct = b'gAAAAABfXp6RDdZKMrmaMB6zJ-t8nDI3M1-tnlH8GiMSjgZebQRQA6Au3oPH7RerqMWw8UhMPL0tAfxCkVV5iE_QJT65TMkurw==' 
 
@@ -38,7 +38,7 @@ class Notification:
             session.ehlo()
             
             #Login to Gmail
-            session.login(GMAIL_USERNAME, bytes(cs.decrypt(ct)).decode("utf-8"))
+            session.login(GMAIL_USERNAME, bytes(ck.decrypt(ct)).decode("utf-8"))
      
             #Send Email & SMS then Exit
             session.sendmail(GMAIL_USERNAME, RECIPIENT , headers + "\r\n\r\n" + MESSAGE) #email
