@@ -38,17 +38,18 @@ def temp_PIController():
         temp_PIController()
     else:
         error = target_temp - current_temp
-        integral = intregal + error
-        pwm = (Kp*error) + (Ki*intregal)
+        proportional = Kp*error
+        integral = intregal + (Ki*error)
+        value =  proportional + integral
 
-        if (pwm > 5)
+        if (value > 5)
             print ("Turn on AC")
             return 0
-        if (pwm < 5)
+        if (value < 5)
             print ("Turn off AC")
             return 0
         else 
-            return 1
+            return 1 #done adjusting temp
     
 if __name__ == '__main__':
     reset_PIVars()
