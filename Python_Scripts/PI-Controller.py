@@ -53,7 +53,7 @@ def temp_PIController():
     
 if __name__ == '__main__':
     reset_PIVars()
-    temp_PIController()
+    ct = temp_PIController()
 
 
 
