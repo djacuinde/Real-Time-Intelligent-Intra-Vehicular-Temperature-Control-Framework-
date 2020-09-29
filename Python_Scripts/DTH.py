@@ -6,7 +6,7 @@ import time
 from datetime import datetime
 
 DHT_SENSOR = Adafruit_DHT.DHT22 #Type of sensor (DTH11 or DTH22)
-DHT_PIN = 4 #GPIO Pin Number
+DHT_PIN = 4 #GPIO Pin Number that is being utilized on the Raspberry Pi 
 
 def readDTH(Degree):
     humidity, temperature = Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)#Get sensor reading
