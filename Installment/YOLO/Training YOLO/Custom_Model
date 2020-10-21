@@ -10,6 +10,8 @@ subdivisions = 1
 
 
 The model is on training mode. darkent>cfg>model.cfg
+Save as model-custom.cfg
+
 [net]
 #Testing
 #batch = 1
@@ -18,3 +20,22 @@ The model is on training mode. darkent>cfg>model.cfg
 batch = 64
 subdivisions = 16
 ...
+
+# 2000 * number of classses = 6000
+max_batches = 6000
+
+# 80% of 6000 = 4800
+# 90% of 6000 = 5400
+steps = 4800, 5400
+
+...
+
+[convolutional]
+#filters = (classes+5)*3 = 24
+filters = 24
+
+[yolo]
+#number of classes the dataset contains
+classes = 3
+random = 0
+
