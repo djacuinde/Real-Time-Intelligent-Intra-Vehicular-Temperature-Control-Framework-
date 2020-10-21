@@ -1,0 +1,20 @@
+The model is on testing mode. darkent>cfg>model.cfg
+[net]
+#Testing
+batch = 1
+subdivisions = 1 
+#Training
+#batch = 64
+#subdivisions = 16
+...
+
+
+The model is on training mode. darkent>cfg>model.cfg
+[net]
+#Testing
+#batch = 1
+#subdivisions = 1 
+#Training
+batch = 64
+subdivisions = 16
+...
