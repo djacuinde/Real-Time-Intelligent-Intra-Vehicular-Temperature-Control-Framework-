@@ -1,7 +1,7 @@
 import os
 
 image_files = []
-# Will search for folder"custom_dataset" in directory "data"
+# Will search for dataset folder "custom_dataset" in directory "data"
 os.chdir(os.path.join("data", "custom_dataset"))
 for filename in os.listdir(os.getcwd()):
     if filename.endswith(".jpg"):
