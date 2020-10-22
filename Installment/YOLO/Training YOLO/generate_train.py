@@ -13,3 +13,6 @@ with open("train.txt", "w") as outfile:
         outfile.write("\n")
     outfile.close()
 os.chdir("..")
+
+
+#Outputs train.txt file in directory "data"
