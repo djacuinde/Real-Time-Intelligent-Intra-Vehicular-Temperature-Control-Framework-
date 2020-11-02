@@ -1,4 +1,4 @@
-# Saving_Lifes_with_ML_-_OBDII
+# Saving Lives using Computer Vision and the CAN BUS
 
 This  project  details  a  possible  solution  for  a  serious  problem  around  the  world  that  can  potentiallyresolve or at least reduce the number of deaths due to Pediatric Vehicular Heatstroke (PVH). The proposedsystem uses a microcontroller-based platform, computer vision, wireless communication notification, andthe integrated second-generation on-board diagnostic port (OBD-II), totaling a cost less than $450.00 U.S.dollars.
 
