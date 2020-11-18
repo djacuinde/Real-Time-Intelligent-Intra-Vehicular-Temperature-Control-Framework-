@@ -19,9 +19,9 @@ def readDTH(Degree):
         if Degree is 'C':
             print("Temp = {0:0.1f} C ; Humidity = {1:0.1f}%".format(temperature, humidity))
     else:
-        print("Cannot read sensor or lost connection !");
-        time.sleep(1);
-    time.sleep(2);
+        print("Cannot read sensor or lost connection !")
+        time.sleep(1)
+    time.sleep(2)
     
 if __name__ == '__main__':
     readDTH('F')
