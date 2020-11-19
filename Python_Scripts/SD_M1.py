@@ -10,7 +10,8 @@ def resetVars():
     PERSON_Stat = 0
     confidenceThreshold = 70.0
 
-
+#pip3 install adafruit-circuitpython-dht
+#sudo apt-get install libgpiod2
 def readDTH():
     temperature = dht_device.temperature
     now = datetime.now()    
