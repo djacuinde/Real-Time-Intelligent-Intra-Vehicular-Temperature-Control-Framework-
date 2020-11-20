@@ -1,5 +1,5 @@
-##Main control program for microncontroller M1 
-##for Cal State Univ Fresno Senior Design 186B 2020
+##Main control program for microncontroller M2 
+##for California State Univ Fresno Senior Design 186B 2020
 ##by James Dols and Daniel Jacuinde
 
 ##necessary dependicies for interaction with AWS IoT Core
@@ -14,6 +14,11 @@ from uuid import uuid4
 #intilize variables
 received_count = 0 
 publish_count = 0
+received_all_event = threading.Event()
+
+main_topic = 'SD_M1/temp/details'
+outgoing_topic = 'TestTopic1'
+outgoing_message = 'Testing 1-2-3'
 
 ##Function definitions.
 # Callback when connection is accidentally lost.
@@ -51,20 +56,43 @@ def on_message_received(topic, payload, **kwargs):
         parsed_topic = topic.split("/")
         if len(parsed_topic) == 3:
             # this topic has the correct format
-            if (parsed_topic[0] == 'device') and (parsed_topic[2] == 'details'):
+            if (parsed_topic[0] == 'SD_M1') and (parsed_topic[2] == 'details'):
                 # this is a topic we care about, so check the 2nd element
                 if (parsed_topic[1] == 'temp'):
-                    print("Received temperature request: {}".format(payload))
+                    print("Received temperature reading: {}".format(payload))
                     topic_parsed = True
-                if (parsed_topic[1] == 'light'):
-                    print("Received light request: {}".format(payload))
+                if (parsed_topic[1] == 'pet'):
+                    print("Received pet detection: {}".format(payload))
                     topic_parsed = True
     if not topic_parsed:
             print("Unrecognized message topic.")
     global received_count
     received_count += 1
-    if received_count == args.count:
+    if received_count == incount:
         received_all_event.set()
+
+##Subscription Topic
+def subscribe(subscribed_topic):  ##pass in topic name in string format. ex SD_M1/temp/details
+    # Subscribe
+    print("Subscribing to topic '{}'...".format(subscribed_topic))
+    subscribe_future, packet_id = mqtt_connection.subscribe(
+        topic=subscribed_topic,
+        qos=mqtt.QoS.AT_LEAST_ONCE,
+        callback=on_message_received)
+
+    subscribe_result = subscribe_future.result()
+    print("Subscribed with {}".format(str(subscribe_result['qos'])))
+
+##Publish to a topic
+def publish_topic(pub_top_name,pub_top_message):
+    global publish_count
+    print("Publishing message to topic '{}': {}".format(pub_top_name, pub_top_message))
+    mqtt_connection.publish(
+        topic=pub_top_name,
+        payload=pub_top_message,
+        qos=mqtt.QoS.AT_LEAST_ONCE)
+    time.sleep(1)
+    publish_count += 1   
 ##END Function definitions.#######################333
 
 ##AWS IoT logging
@@ -72,12 +100,15 @@ def on_message_received(topic, payload, **kwargs):
 io.init_logging(getattr(io.LogLevel, io.LogLevel.NoLogs.name), 'stderr')
 
 ##connect to AWS
+##connection variables
+
+
 
 event_loop_group = io.EventLoopGroup(1)
 host_resolver = io.DefaultHostResolver(event_loop_group)
 client_bootstrap = io.ClientBootstrap(event_loop_group, host_resolver)
 
-
+##Replace the below with necessary value for thing M1 or M2
 mqtt_connection = mqtt_connection_builder.mtls_from_path(
     endpoint='a3f97mcy639kgs-ats.iot.us-east-2.amazonaws.com',
     cert_filepath="/home/pi/certs/device.pem.crt",
@@ -89,7 +120,7 @@ mqtt_connection = mqtt_connection_builder.mtls_from_path(
     client_id="SD_M2-" + str(uuid4()),
     clean_session=False,
     keep_alive_secs=6)
-##Redefined endpoint and client as local variables##This is not strictly needed.    
+##Redefined endpoint and client as local variables##This is not strictly needed except for print statement.    
 endpoint='a3f97mcy639kgs-ats.iot.us-east-2.amazonaws.com'
 client_id="SD_M2-" + str(uuid4())
 
@@ -101,50 +132,21 @@ connect_future = mqtt_connection.connect()
 connect_future.result()
 print("Connected!")
 
+##Subscribes to the topic
+subscribe(main_topic)
+##Publish to a topic
+publish_topic(outgoing_topic,outgoing_message)
 
-"""
-# Subscribe
-print("Subscribing to topic '{}'...".format(args.topic))
-subscribe_future, packet_id = mqtt_connection.subscribe(
-    topic=args.topic,
-    qos=mqtt.QoS.AT_LEAST_ONCE,
-    callback=on_message_received)
-
-subscribe_result = subscribe_future.result()
-print("Subscribed with {}".format(str(subscribe_result['qos'])))
-"""
-# Publish message to server desired number of times.
-# This step is skipped if message is blank.
-# This step loops forever if count was set to 0.
-"""
-if args.message:
-    if args.count == 0:
-        print ("Sending messages until program killed")
-    else:
-        print ("Sending {} message(s)".format(args.count))
-
-    publish_count = 1
-    while (publish_count <= args.count) or (args.count == 0):
-        message = "{} [{}]".format(args.message, publish_count)
-"""
-topic = 'TestTopic1'
-message = 'Testing 1-2-3'
-print("Publishing message to topic '{}': {}".format(topic, message))
-mqtt_connection.publish(
-    topic=topic,
-    payload=message,
-    qos=mqtt.QoS.AT_LEAST_ONCE)
-time.sleep(1)
-publish_count += 1
-"""
+incount = 2
 # Wait for all messages to be received.
-# This waits forever if count was set to 0.
-if args.count != 0 and not received_all_event.is_set():
+# This waits forever if incount was set to 0.
+if incount != 0 and not received_all_event.is_set():
     print("Waiting for all messages to be received...")
 
 received_all_event.wait()
 print("{} message(s) received.".format(received_count))
-"""
+
+
 # Disconnect
 print("Disconnecting...")
 disconnect_future = mqtt_connection.disconnect()
