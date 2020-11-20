@@ -16,9 +16,9 @@ received_count = 0
 publish_count = 0
 received_all_event = threading.Event()
 
-main_topic = 'SD_M1/temp/details'
-outgoing_topic = 'TestTopic1'
-outgoing_message = 'Testing 1-2-3'
+incoming_topic = 'SD_M1/temp/details'
+outgoing_topic = 'SD_M2/recheck/details'
+outgoing_message = 'Check again'
 
 ##Function definitions.
 # Callback when connection is accidentally lost.
@@ -50,6 +50,7 @@ def on_resubscribe_complete(resubscribe_future):
 
 # Callback when the subscribed topic receives a message
 def on_message_received(topic, payload, **kwargs):
+    global current_temp
     print("Received message from topic '{}': {}".format(topic, payload))
     topic_parsed = False
     if "/" in topic:
@@ -60,10 +61,8 @@ def on_message_received(topic, payload, **kwargs):
                 # this is a topic we care about, so check the 2nd element
                 if (parsed_topic[1] == 'temp'):
                     print("Received temperature reading: {}".format(payload))
-                    topic_parsed = True
-                if (parsed_topic[1] == 'pet'):
-                    print("Received pet detection: {}".format(payload))
-                    topic_parsed = True
+                    current_temp = float(payload)  ##Convert the received string into a float. 
+                    topic_parsed = True  
     if not topic_parsed:
             print("Unrecognized message topic.")
     global received_count
@@ -131,21 +130,36 @@ connect_future = mqtt_connection.connect()
 # Future.result() waits until a result is available
 connect_future.result()
 print("Connected!")
+#########Main code goes below #####################################
 
 ##Subscribes to the topic
-subscribe(main_topic)
-##Publish to a topic
-publish_topic(outgoing_topic,outgoing_message)
+subscribe(incoming_topic)
 
-incount = 2
+"""
+##Publish to a topic
+
+publish_topic(outgoing_topic,outgoing_message)
+"""
+
+incount = 1
 # Wait for all messages to be received.
-# This waits forever if incount was set to 0.
+#This waits forever if incount was set to 0.
 if incount != 0 and not received_all_event.is_set():
     print("Waiting for all messages to be received...")
 
 received_all_event.wait()
 print("{} message(s) received.".format(received_count))
 
+print('Sending a notification to the registered owner')
+
+if current_temp > 80.5:
+    print('Turning on the AC')
+else:
+    print('Temp is ok, no action needed')
+
+time.sleep(2)  #sleep then send a message back to M1
+
+publish_topic(outgoing_topic,outgoing_message)
 
 # Disconnect
 print("Disconnecting...")
