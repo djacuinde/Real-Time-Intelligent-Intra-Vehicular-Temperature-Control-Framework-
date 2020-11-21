@@ -2,6 +2,9 @@
 ##for California State Univ Fresno Senior Design 186B 2020
 ##by James Dols and Daniel Jacuinde
 
+
+#python-can libarary
+import can
 ##necessary dependicies for interaction with AWS IoT Core
 import argparse
 from awscrt import io, mqtt, auth, http
@@ -15,6 +18,9 @@ from uuid import uuid4
 received_count = 0 
 publish_count = 0
 received_all_event = threading.Event()
+lastsendtime = 0.0
+global finish
+finish = False
 
 incoming_topic = 'SD_M1/temp/details'
 outgoing_topic = 'SD_M2/recheck/details'
@@ -51,6 +57,7 @@ def on_resubscribe_complete(resubscribe_future):
 # Callback when the subscribed topic receives a message
 def on_message_received(topic, payload, **kwargs):
     global current_temp
+    global finish
     print("Received message from topic '{}': {}".format(topic, payload))
     topic_parsed = False
     if "/" in topic:
@@ -62,7 +69,9 @@ def on_message_received(topic, payload, **kwargs):
                 if (parsed_topic[1] == 'temp'):
                     print("Received temperature reading: {}".format(payload))
                     current_temp = float(payload)  ##Convert the received string into a float. 
-                    topic_parsed = True  
+                    if current_temp == -999.0:##recieving a payload value of -999.0 will cause the session to disconnect.
+                        finish = True
+                topic_parsed = True            
     if not topic_parsed:
             print("Unrecognized message topic.")
     global received_count
@@ -140,26 +149,36 @@ subscribe(incoming_topic)
 
 publish_topic(outgoing_topic,outgoing_message)
 """
+### start main loop
+while not finish:
+    incount = 1
+    # Wait for all messages to be received.
+    #This waits forever if incount was set to 0.
+    if incount != 0 and not received_all_event.is_set():
+        print("Waiting for all messages to be received...")
 
-incount = 1
-# Wait for all messages to be received.
-#This waits forever if incount was set to 0.
-if incount != 0 and not received_all_event.is_set():
-    print("Waiting for all messages to be received...")
+    received_all_event.wait()
+    print("{} message(s) received.".format(received_count))
 
-received_all_event.wait()
-print("{} message(s) received.".format(received_count))
 
-print('Sending a notification to the registered owner')
+    if time.time()-lastsendtime > 120: #prevents spamming notifications
+        print('At least two minutes have past')
+        print('Sending a notification to the registered owner')
+        lastsendtime =time.time()
+    else:
+        print('Too soon to send another notification')
 
-if current_temp > 80.5:
-    print('Turning on the AC')
-else:
-    print('Temp is ok, no action needed')
+    if current_temp > 80.5:
+        print('Turning on the AC')
+    else:
+        print('Temp is ok, no action needed')
 
-time.sleep(2)  #sleep then send a message back to M1
+    time.sleep(1)  #sleep then send a message back to M1
 
-publish_topic(outgoing_topic,outgoing_message)
+    publish_topic(outgoing_topic,outgoing_message)
+    received_all_event.clear()##reset wait for received.
+    received_count = 0 ##reset received_count
+##End main loop
 
 # Disconnect
 print("Disconnecting...")
