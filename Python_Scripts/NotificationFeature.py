@@ -4,9 +4,9 @@ import smtplib
 from cryptography.fernet import Fernet
 
 #EMAIL_PASSWORD key
-ck = Fernet(b'HqiwPbvnbVK5Yshgop7xOKxLCFyiPaF6qFSjxW4i2DM=')
+ck = Fernet(b'FH0uzJ2Yl47lh1xYgcMBchLMbOcLg9gNPepDpOLOmgw=')
 #EMAIL_PASSWORD cipher password
-ct = b'gAAAAABfXp6RDdZKMrmaMB6zJ-t8nDI3M1-tnlH8GiMSjgZebQRQA6Au3oPH7RerqMWw8UhMPL0tAfxCkVV5iE_QJT65TMkurw==' 
+ct = b'gAAAAABfqgEZh_XKJgYrF2NeHPYkNyFSgRHbC8c6M94G7hNP9f1aoH7MHqDvZcdImBQxF6PkY36pAXy1Jwy2sOe_hUG9g8DyQw=='
 
 #SMS ending
 carriers ={
@@ -19,8 +19,9 @@ carriers ={
 SMTP_SERVER = 'smtp.gmail.com' #Email Server 
 SMTP_PORT = 587 #Server Port 
 GMAIL_USERNAME = 'savinglife2020fresnostate@gmail.com' #gmail account of SENDER
-SUBJECT = " PVH Prevention Service"
-MESSAGE = " There is an unattended PET or CHILD is your vehicle!"
+PASSWORD = 'Save#Lives*='
+SUBJECT = 'PVH Prevention Service'
+MESSAGE = 'There is an unattended PET is your vehicle!'
 
 
 class Notification:
@@ -39,7 +40,7 @@ class Notification:
             
             #Login to Gmail
             session.login(GMAIL_USERNAME, bytes(ck.decrypt(ct)).decode("utf-8"))
-     
+            #session.login(GMAIL_USERNAME, PASSWORD)
             #Send Email & SMS then Exit
             session.sendmail(GMAIL_USERNAME, RECIPIENT , headers + "\r\n\r\n" + MESSAGE) #email
             PHONE_NUM = phoneNumber + '{}'.format(carriers[carrierType])  
@@ -49,5 +50,3 @@ class Notification:
 if __name__ == '__main__':
     N = Notification
     N.sendNotification('djacuinde96@gmail.com', '5597045940', 'att')
-
- 
