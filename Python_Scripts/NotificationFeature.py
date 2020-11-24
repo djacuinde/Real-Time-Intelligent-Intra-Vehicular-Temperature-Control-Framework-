@@ -19,7 +19,6 @@ carriers ={
 SMTP_SERVER = 'smtp.gmail.com' #Email Server 
 SMTP_PORT = 587 #Server Port 
 GMAIL_USERNAME = 'savinglife2020fresnostate@gmail.com' #gmail account of SENDER
-PASSWORD = 'Save#Lives*='
 SUBJECT = 'PVH Prevention Service'
 MESSAGE = 'There is an unattended PET is your vehicle!'
 
