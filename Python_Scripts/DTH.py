@@ -1,21 +1,24 @@
-#sudo pip3 install Adafruit_DHT
+#use custom Adafruit_DHT from 
 
-import board
-import adafruit_dht
-import time
+import Adafruit_DHT
 from datetime import datetime
 
-#DTH22 with data_pin on GPIO4 on Pi
-dht_device = adafruit_dht.DHT22(board.D4, use_pulseio=False)
+TempC = 0.0
 
-def readDTH():
-    temperature = dht_device.temperature
+def readTemp():
+    humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 4)
+
     now = datetime.now()    
-    current_time = now.strftime ("%I:%M:%S %p") #output time to format HH:MM:SS AM/PM
+    current_time = now.strftime ("%I:%M:%S %p")
     print ("Time =", current_time)
-    print("Temp = {0:0.1f} C ".format(temperature))
-    return temperature
-    
+    if humidity is not None and temperature is not None:
+        TempC = '{0:0.1f}*C '.format(temperature)
+        print('Temperature = ', TempC)
+        return TempC
+    else:
+        print('Failed to get reading. Try again!')
+        return 0
+
 if __name__ == '__main__':
-    Temp = readDTH()
+    Temp = readTemp()
     print(Temp)
