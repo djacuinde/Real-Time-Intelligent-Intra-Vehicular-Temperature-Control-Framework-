@@ -9,7 +9,8 @@
 # Script was developed by Adrian Rosebrock
 # Modified by Daniel Jacuinde from CSU, Fresno
 
-#Functions:
+####################################Functions########################################
+
 def resetVars():
     startTime = 0.0
     endTime = 0.0
@@ -18,7 +19,6 @@ def resetVars():
     DOG_Stat = 0
     CAT_Stat = 0
     PERSON_Stat = 0
-    confidenceThreshold = 70.0
 
 ####################################Libraries########################################
 
@@ -35,14 +35,16 @@ from imutils.video import VideoStream
 from pyimagesearch.utils import Conf
 from imutils.video import FPS
 
+#Other
 import numpy as np
-import argparse#CL interface
-import imutils #Video
+import argparse
+import imutils
 import time
-import cv2#OpenCV
+import cv2
 import os
 
-#from DTH import readDTH
+#Temperature 
+from DTH import readTemp
 
 #######################################SETUP########################################
 print("Initializing Parameters")
@@ -109,11 +111,12 @@ fps = FPS().start()
 
 
 ######################################Processing#####################################
-#Flag
+
+#Detection Flag
 detectResult = False 
 
-print("[INFO] Runnig Detection Now!")
-# loop over the frames from the video stream
+print("[INFO] Runnig Detection...")
+
 while(detectResult == False):
     
     startTimerTime = time.perf_counter()
@@ -225,45 +228,42 @@ while(detectResult == False):
         elapseTime = endTime - startTime #seconds
         print(elapseTime)
 
-# stop the timer and display FPS information
-fps.stop()
-print("[INFO] elapsed time: {:.2f}".format(fps.elapsed()))
-print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
-print("[INFO] Time Frame Calculation for Person: ", PERSON_Stat)
-print("[INFO] Time Frame Calculation for Dog: ", DOG_Stat)
-print("[INFO] Time Frame Calculation for Cat: ", CAT_Stat)
+    # stop the timer and display FPS information
+    fps.stop()
+    print("[INFO] elapsed time: {:.2f}".format(fps.elapsed()))
+    print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
+    print("[INFO] Time Frame Calculation for Person: ", PERSON_Stat)
+    print("[INFO] Time Frame Calculation for Dog: ", DOG_Stat)
+    print("[INFO] Time Frame Calculation for Cat: ", CAT_Stat)
 
-#calculate confidence level
-print("Calculating OD Stats")
-IterationPercentage = elapseTimerTime / detectIterations
-print(IterationPercentage)
+    #calculate confidence level
+    print("Calculating OD Stats")
+    IterationPercentage = elapseTimerTime / detectIterations
+    print(IterationPercentage)
 
-DOG_Final= DOG_Stat * IterationPercentage
-print(DOG_Final)
+    DOG_Final= DOG_Stat * IterationPercentage
+    print(DOG_Final)
 
-CAT_Final= CAT_Stat * IterationPercentage
-print(CAT_Final)
+    CAT_Final= CAT_Stat * IterationPercentage
+    print(CAT_Final)
 
-PERSON_Final= PERSON_Stat * IterationPercentage
-print(PERSON_Final)
+    PERSON_Final= PERSON_Stat * IterationPercentage
+    print(PERSON_Final)
 
-if(PERSON_Final > confidenceTimeThreshold ):
-    #do nothing
-    detectResult = False
-    print("detectResult = False")
-
-elif(((DOG_Final or CAT_Final) > confidenceTimeThreshold) and (PERSON_Final < confidenceTimeThreshold )):
-    #pet is detected
-    detectResult = True
-    print("detectResult = True")
-else :
-    detectResult = False
-    print("detectResult = False")
+    if(((DOG_Final or CAT_Final) > confidenceTimeThreshold) and (PERSON_Final < confidenceTimeThreshold )):
+        #pet is detected
+        detectResult = True
+        print("[INFO] Detection...")
+        #print("detectResult = True")
+    else :
+        detectResult = False
+        print("[INFO] No Detection...")
+        resetVars()
         
 if (detectResult == True):
     #Close resources
     print("Reading TEMP")
-    Current_Temp = readDTH()
+    Current_Temp = readTemp()
     print(Current_Temp)
 
     # stop the video stream and close any open windows1
