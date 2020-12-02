@@ -1,4 +1,4 @@
-#use custom Adafruit_DHT from https://github.com/djacuinde96/Adafruit_Python_DHT.git
+#use custom Adafruit_DHT Lib from https://github.com/djacuinde96/Adafruit_Python_DHT.git
 
 import Adafruit_DHT
 from datetime import datetime
