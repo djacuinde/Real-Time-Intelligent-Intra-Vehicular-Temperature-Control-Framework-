@@ -131,6 +131,11 @@ import time
 from uuid import uuid4
 
 #######################################SETUP########################################
+
+#Topics
+incoming_topic = 'SD_M2/recheck/details'
+outgoing_topic = 'SD_M1/temp/details'
+
 ##AWS IoT logging
 #original line: io.init_logging(getattr(io.LogLevel, args.verbosity), 'stderr')
 io.init_logging(getattr(io.LogLevel, io.LogLevel.NoLogs.name), 'stderr')
@@ -165,6 +170,9 @@ connect_future = mqtt_connection.connect()
 connect_future.result()
 print("Connected to AWS!")
 
+subscribe(incoming_topic)
+
+
 #Object Detection
 print("Initializing Parameters")
 startTimerTime = 0.0
@@ -187,9 +195,7 @@ lastsendtime = 0.0
 global finish
 finish = False
 
-#Topics
-incoming_topic = 'SD_M2/recheck/details'
-outgoing_topic = 'SD_M1/temp/details'
+
 
 # Command Line Interface #
 # construct the argument parser and parse the arguments
@@ -400,10 +406,13 @@ if (detectResult == True):
     print("Reading TEMP")
     Current_Temp = readTemp()
     print(Current_Temp)
+    #Publish to AWS
+    publish_topic(outgoing_topic, Current_Temp)
 
     # stop the video stream and close any open windows1
     vs.stop() #if args["input"] is None else vs.release()
     cv2.destroyAllWindows()
+
 
 ###################################END OF FILE######################################
 
