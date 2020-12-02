@@ -417,6 +417,8 @@ def Object_Detection():
         vs.stop() #if args["input"] is None else vs.release()
         cv2.destroyAllWindows()
 
+if __name__ == '__main__':
+    Object_Detection()
 
 ###################################END OF FILE######################################
 
