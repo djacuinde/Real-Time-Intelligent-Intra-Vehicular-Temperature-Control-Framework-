@@ -415,7 +415,7 @@ def Object_Detection():
 
         # stop the video stream and close any open windows1
         vs.stop() #if args["input"] is None else vs.release()
-        cv2.destroyAllWindows()
+        #cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     while (1):
