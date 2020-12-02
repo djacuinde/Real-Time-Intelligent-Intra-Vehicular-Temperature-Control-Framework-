@@ -155,7 +155,7 @@ mqtt_connection = mqtt_connection_builder.mtls_from_path(
     keep_alive_secs=6)
 ##Redefined endpoint and client as local variables##This is not strictly needed except for print statement.    
 endpoint='a3f97mcy639kgs-ats.iot.us-east-2.amazonaws.com'
-client_id="SD_M2-" + str(uuid4())
+client_id="SD_M1-" + str(uuid4())
 
 print("Connecting to {} with client ID '{}'...".format(endpoint, client_id))
 
