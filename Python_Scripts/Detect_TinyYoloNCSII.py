@@ -1,18 +1,5 @@
 ##################################START OF FILE##################################### 
-# $ workon opencv
-# $ source ~/openvino/bin/setupvars.sh
-# $ cd Desktop/tiny-yolo-ncs/
-
-
-#Run the command below using Command Line using video example
-# $ python detect_realtime_tinyyolo_ncs.py --conf config/config.json --input videos/test_video.mp4
-
-#Run the command below using Command Line using pi Camera
-# $ python detect_realtime_tinyyolo_ncs.py --conf config/config.json 
-
-# Developed by Adrian Rosebrock
-# Modified by Daniel Jacuinde from CSU, Fresno 
-
+			# Developed by Adrian Rosebrock
 ####################################Libraries########################################
 
 # Movidius NCS2
