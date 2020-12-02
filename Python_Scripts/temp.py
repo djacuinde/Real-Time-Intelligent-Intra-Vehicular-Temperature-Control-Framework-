@@ -9,6 +9,41 @@
 # Script was developed by Adrian Rosebrock
 # Modified by Daniel Jacuinde from CSU, Fresno
 
+####################################Libraries########################################
+
+# Movidius NCS2
+from openvino.inference_engine import IENetwork 
+from openvino.inference_engine import IEPlugin
+
+#Object Detection Model
+from intel.yoloparams import TinyYOLOV3Params
+from intel.tinyyolo import TinyYOLOv3
+
+#Video
+from imutils.video import VideoStream
+from pyimagesearch.utils import Conf
+from imutils.video import FPS
+
+#Other
+import numpy as np
+import argparse
+import imutils
+import time
+import cv2
+import os
+
+#Temperature 
+from DTH import readTemp
+
+##AWS IoT Core
+import argparse
+from awscrt import io, mqtt, auth, http
+from awsiot import mqtt_connection_builder
+import sys
+import threading
+import time
+from uuid import uuid4
+
 ####################################Functions########################################
 
 def resetVars():
@@ -95,43 +130,12 @@ def publish_topic(pub_top_name,pub_top_message):
         qos=mqtt.QoS.AT_LEAST_ONCE)
     time.sleep(1)
     publish_count += 1 
-####################################Libraries########################################
 
-# Movidius NCS2
-from openvino.inference_engine import IENetwork 
-from openvino.inference_engine import IEPlugin
 
-#Object Detection Model
-from intel.yoloparams import TinyYOLOV3Params
-from intel.tinyyolo import TinyYOLOv3
 
-#Video
-from imutils.video import VideoStream
-from pyimagesearch.utils import Conf
-from imutils.video import FPS
-
-#Other
-import numpy as np
-import argparse
-import imutils
-import time
-import cv2
-import os
-
-#Temperature 
-from DTH import readTemp
-
-##AWS IoT Core
-import argparse
-from awscrt import io, mqtt, auth, http
-from awsiot import mqtt_connection_builder
-import sys
-import threading
-import time
-from uuid import uuid4
-
-#######################################SETUP########################################
 def Object_Detection():
+    
+    #######################################SETUP########################################
     #Topics
     incoming_topic = 'SD_M2/recheck/details'
     outgoing_topic = 'SD_M1/temp/details'
