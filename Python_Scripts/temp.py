@@ -426,6 +426,8 @@ if __name__ == '__main__':
 
         received_all_event.wait()
         print("{} message(s) received.".format(received_count))
+        received_all_event.clear()##reset wait for received.
+        received_count = 0 ##reset received_count
 
 ###################################END OF FILE######################################
 
