@@ -421,5 +421,11 @@ if __name__ == '__main__':
     while (1):
         Object_Detection()
 
+        if not received_all_event.is_set():
+        print("Waiting for all messages to be received...")
+
+        received_all_event.wait()
+        print("{} message(s) received.".format(received_count))
+
 ###################################END OF FILE######################################
 
