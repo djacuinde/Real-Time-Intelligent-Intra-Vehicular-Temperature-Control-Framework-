@@ -418,7 +418,8 @@ def Object_Detection():
         cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    Object_Detection()
+    while (1):
+        Object_Detection()
 
 ###################################END OF FILE######################################
 
