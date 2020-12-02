@@ -131,6 +131,41 @@ import time
 from uuid import uuid4
 
 #######################################SETUP########################################
+##AWS IoT logging
+#original line: io.init_logging(getattr(io.LogLevel, args.verbosity), 'stderr')
+io.init_logging(getattr(io.LogLevel, io.LogLevel.NoLogs.name), 'stderr')
+
+##connect to AWS
+##connection variables
+event_loop_group = io.EventLoopGroup(1)
+host_resolver = io.DefaultHostResolver(event_loop_group)
+client_bootstrap = io.ClientBootstrap(event_loop_group, host_resolver)
+
+##Replace the below with necessary value for thing M1 or M2
+mqtt_connection = mqtt_connection_builder.mtls_from_path(
+    endpoint='a3f97mcy639kgs-ats.iot.us-east-2.amazonaws.com',
+    cert_filepath="/home/pi/certs/device.pem.crt",
+    pri_key_filepath='/home/pi/certs/private.pem.key',
+    client_bootstrap=client_bootstrap,
+    ca_filepath='/home/pi/certs/Amazon-root-CA-1.pem',
+    on_connection_interrupted=on_connection_interrupted,
+    on_connection_resumed=on_connection_resumed,
+    client_id="SD_M1-" + str(uuid4()),
+    clean_session=False,
+    keep_alive_secs=6)
+##Redefined endpoint and client as local variables##This is not strictly needed except for print statement.    
+endpoint='a3f97mcy639kgs-ats.iot.us-east-2.amazonaws.com'
+client_id="SD_M2-" + str(uuid4())
+
+print("Connecting to {} with client ID '{}'...".format(endpoint, client_id))
+
+connect_future = mqtt_connection.connect()
+
+# Future.result() waits until a result is available
+connect_future.result()
+print("Connected to AWS!")
+
+#Object Detection
 print("Initializing Parameters")
 startTimerTime = 0.0
 endTimerTime = 0.0
