@@ -131,287 +131,287 @@ import time
 from uuid import uuid4
 
 #######################################SETUP########################################
+def Object_Detection():
+    #Topics
+    incoming_topic = 'SD_M2/recheck/details'
+    outgoing_topic = 'SD_M1/temp/details'
 
-#Topics
-incoming_topic = 'SD_M2/recheck/details'
-outgoing_topic = 'SD_M1/temp/details'
+    ##AWS IoT logging
+    #original line: io.init_logging(getattr(io.LogLevel, args.verbosity), 'stderr')
+    io.init_logging(getattr(io.LogLevel, io.LogLevel.NoLogs.name), 'stderr')
 
-##AWS IoT logging
-#original line: io.init_logging(getattr(io.LogLevel, args.verbosity), 'stderr')
-io.init_logging(getattr(io.LogLevel, io.LogLevel.NoLogs.name), 'stderr')
+    ##connect to AWS
+    ##connection variables
+    event_loop_group = io.EventLoopGroup(1)
+    host_resolver = io.DefaultHostResolver(event_loop_group)
+    client_bootstrap = io.ClientBootstrap(event_loop_group, host_resolver)
 
-##connect to AWS
-##connection variables
-event_loop_group = io.EventLoopGroup(1)
-host_resolver = io.DefaultHostResolver(event_loop_group)
-client_bootstrap = io.ClientBootstrap(event_loop_group, host_resolver)
+    ##Replace the below with necessary value for thing M1 or M2
+    mqtt_connection = mqtt_connection_builder.mtls_from_path(
+        endpoint='a3f97mcy639kgs-ats.iot.us-east-2.amazonaws.com',
+        cert_filepath="/home/pi/certs/device.pem.crt",
+        pri_key_filepath='/home/pi/certs/private.pem.key',
+        client_bootstrap=client_bootstrap,
+        ca_filepath='/home/pi/certs/Amazon-root-CA-1.pem',
+        on_connection_interrupted=on_connection_interrupted,
+        on_connection_resumed=on_connection_resumed,
+        client_id="SD_M1-" + str(uuid4()),
+        clean_session=False,
+        keep_alive_secs=6)
+    ##Redefined endpoint and client as local variables##This is not strictly needed except for print statement.    
+    endpoint='a3f97mcy639kgs-ats.iot.us-east-2.amazonaws.com'
+    client_id="SD_M1-" + str(uuid4())
 
-##Replace the below with necessary value for thing M1 or M2
-mqtt_connection = mqtt_connection_builder.mtls_from_path(
-    endpoint='a3f97mcy639kgs-ats.iot.us-east-2.amazonaws.com',
-    cert_filepath="/home/pi/certs/device.pem.crt",
-    pri_key_filepath='/home/pi/certs/private.pem.key',
-    client_bootstrap=client_bootstrap,
-    ca_filepath='/home/pi/certs/Amazon-root-CA-1.pem',
-    on_connection_interrupted=on_connection_interrupted,
-    on_connection_resumed=on_connection_resumed,
-    client_id="SD_M1-" + str(uuid4()),
-    clean_session=False,
-    keep_alive_secs=6)
-##Redefined endpoint and client as local variables##This is not strictly needed except for print statement.    
-endpoint='a3f97mcy639kgs-ats.iot.us-east-2.amazonaws.com'
-client_id="SD_M1-" + str(uuid4())
+    print("Connecting to {} with client ID '{}'...".format(endpoint, client_id))
 
-print("Connecting to {} with client ID '{}'...".format(endpoint, client_id))
+    connect_future = mqtt_connection.connect()
 
-connect_future = mqtt_connection.connect()
+    # Future.result() waits until a result is available
+    connect_future.result()
+    print("Connected to AWS!")
 
-# Future.result() waits until a result is available
-connect_future.result()
-print("Connected to AWS!")
-
-subscribe(incoming_topic)
-
-
-#Object Detection
-print("Initializing Parameters")
-startTimerTime = 0.0
-endTimerTime = 0.0
-elapseTimerTime = 0.0
-setTimerTime = 10.0 #seconds (30sec)
-
-#Detection
-detectIterations = 0
-DOG_Stat = 0
-CAT_Stat = 0
-PERSON_Stat = 0
-confidenceTimeThreshold = .70
-
-#intilize variables AWS
-received_count = 0 
-publish_count = 0
-received_all_event = threading.Event()
-lastsendtime = 0.0
-global finish
-finish = False
+    subscribe(incoming_topic)
 
 
+    #Object Detection
+    print("Initializing Parameters")
+    startTimerTime = 0.0
+    endTimerTime = 0.0
+    elapseTimerTime = 0.0
+    setTimerTime = 10.0 #seconds (30sec)
 
-# Command Line Interface #
-# construct the argument parser and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-c", "--conf", required=True,
-    help="Path to the input configuration file")
-ap.add_argument("-i", "--input", help="path to the input video file")
-args = vars(ap.parse_args())
+    #Detection
+    detectIterations = 0
+    DOG_Stat = 0
+    CAT_Stat = 0
+    PERSON_Stat = 0
+    confidenceTimeThreshold = .70
 
-# load the configuration file
-conf = Conf(args["conf"])
+    #intilize variables AWS
+    received_count = 0 
+    publish_count = 0
+    received_all_event = threading.Event()
+    lastsendtime = 0.0
+    global finish
+    finish = False
 
-# COCO label and corresponding color preparation #
-# load the COCO class labels that YOLO model was trained on and
-# initialize a list of colors to represent each possible class label
-LABELS = open(conf["labels_path"]).read().strip().split("\n")
-np.random.seed(42)
-COLORS = np.random.uniform(0, 255, size=(len(LABELS), 3))
 
-# Load tinyYOLOv3 modle onto Movidius NCS2 #
-# initialize the plugin in for specified device
-plugin = IEPlugin(device="MYRIAD")
 
-# read the IR generated by the Model Optimizer (.xml and .bin files)
-#.xml is YOLO architecture & .bin is the pretrained weights
-print("[INFO] loading models...")
-net = IENetwork(model=conf["xml_path"], weights=conf["bin_path"])
+    # Command Line Interface #
+    # construct the argument parser and parse the arguments
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-c", "--conf", required=True,
+        help="Path to the input configuration file")
+    ap.add_argument("-i", "--input", help="path to the input video file")
+    args = vars(ap.parse_args())
 
-# prepare inputs
-print("[INFO] preparing inputs...")
-inputBlob = next(iter(net.inputs))
+    # load the configuration file
+    conf = Conf(args["conf"])
 
-# set the default batch size as 1 and get the number of input blobs,
-# number of channels, the height, and width of the input blob
-net.batch_size = 1
-(n, c, h, w) = net.inputs[inputBlob].shape
+    # COCO label and corresponding color preparation #
+    # load the COCO class labels that YOLO model was trained on and
+    # initialize a list of colors to represent each possible class label
+    LABELS = open(conf["labels_path"]).read().strip().split("\n")
+    np.random.seed(42)
+    COLORS = np.random.uniform(0, 255, size=(len(LABELS), 3))
 
-# /Image input reference for tinyYOLOv3 #
-# if a video path was not supplied, grab a reference to the webcam
-if args["input"] is None:
-    print("[INFO] starting video stream...")
-    # vs = VideoStream(src=0).start() #USB Camera
-    vs = VideoStream(usePiCamera=True).start() #Pi Camera
-    time.sleep(2.0)
-    # otherwise, grab a reference to the video file
-else:
-    print("[INFO] opening image/video file...")
-    vs = cv2.VideoCapture(os.path.abspath(args["input"]))
-    
-# loading model to the plugin and start the frames per second
-# throughput estimator
-print("[INFO] loading model to the plugin...")
-execNet = plugin.load(network=net, num_requests=1)
-fps = FPS().start()
+    # Load tinyYOLOv3 modle onto Movidius NCS2 #
+    # initialize the plugin in for specified device
+    plugin = IEPlugin(device="MYRIAD")
 
-######################################Processing#####################################
+    # read the IR generated by the Model Optimizer (.xml and .bin files)
+    #.xml is YOLO architecture & .bin is the pretrained weights
+    print("[INFO] loading models...")
+    net = IENetwork(model=conf["xml_path"], weights=conf["bin_path"])
 
-#Detection Flag
-detectResult = False 
+    # prepare inputs
+    print("[INFO] preparing inputs...")
+    inputBlob = next(iter(net.inputs))
 
-print("[INFO] Runnig Detection...")
+    # set the default batch size as 1 and get the number of input blobs,
+    # number of channels, the height, and width of the input blob
+    net.batch_size = 1
+    (n, c, h, w) = net.inputs[inputBlob].shape
 
-while(detectResult == False):
-    
-    startTimerTime = time.perf_counter()
-    while(elapseTimerTime < setTimerTime):
+    # /Image input reference for tinyYOLOv3 #
+    # if a video path was not supplied, grab a reference to the webcam
+    if args["input"] is None:
+        print("[INFO] starting video stream...")
+        # vs = VideoStream(src=0).start() #USB Camera
+        vs = VideoStream(usePiCamera=True).start() #Pi Camera
+        time.sleep(2.0)
+        # otherwise, grab a reference to the video file
+    else:
+        print("[INFO] opening image/video file...")
+        vs = cv2.VideoCapture(os.path.abspath(args["input"]))
         
-        # grab the next frame and handle VideoCapture or VideoStream
-        orig = vs.read()
-        orig = orig[1] if args["input"] is not None else orig
+    # loading model to the plugin and start the frames per second
+    # throughput estimator
+    print("[INFO] loading model to the plugin...")
+    execNet = plugin.load(network=net, num_requests=1)
+    fps = FPS().start()
 
-        # if we are viewing a video and we did not grab a frame then we
-        # have reached the end of the video
-        if args["input"] is not None and orig is None:
-            break
+    ######################################Processing#####################################
 
-        # resize original frame to have a maximum width of 500 pixel and
-        # input_frame to network size
-        orig = imutils.resize(orig, width=500)
-        frame = cv2.resize(orig, (w, h))
+    #Detection Flag
+    detectResult = False 
 
-        # change data layout from HxWxC to CxHxW
-        frame = frame.transpose((2, 0, 1))
-        frame = frame.reshape((n, c, h, w))
+    print("[INFO] Runnig Detection...")
 
-        # start inference and initialize list to collect object detection
-        # results
-        output = execNet.infer({inputBlob: frame})
-        objects = []
-
-        # loop over the output items
-        for (layerName, outBlob) in output.items():
-            # create an object with required tinyYOLOv3 parameters
-            layerParams = TinyYOLOV3Params(net.layers[layerName].params,
-                outBlob.shape[2])
-
-            # parse the output region
-            objects += TinyYOLOv3.parse_yolo_region(outBlob,
-                frame.shape[2:], orig.shape[:-1], layerParams,
-                conf["prob_threshold"])
-
-        # loop over each of the objects
-        for i in range(len(objects)):
-            # check if the confidence of the detected object is zero, if
-            # it is, then skip this iteration, indicating that the object
-            # should be ignored
-            if objects[i]["confidence"] == 0:
-                continue
-
-            # loop over remaining objects[Intersection over Union (IoU)]
-            for j in range(i + 1, len(objects)):
-                # check if the IoU of both the objects exceeds a
-                # threshold, if it does, then set the confidence of
-                # that object to zero
-                if TinyYOLOv3.intersection_over_union(objects[i],
-                    objects[j]) > conf["iou_threshold"]:
-                    objects[j]["confidence"] = 0
-
-        # filter objects by using the probability threshold -- if a an
-        # object is below the threshold, ignore it
-        objects = [obj for obj in objects if obj['confidence'] >= \
-            conf["prob_threshold"]]
-
-    ############################Object Detection Frame & Stats###########################
-
-        # store the height and width of the original frame
-        (endY, endX) = orig.shape[:-1]
-
-        # loop through all the remaining objects
-        for obj in objects:
-            # validate the bounding box of the detected object, ensuring
-            # we don't have any invalid bounding boxes
-            if obj["xmax"] > endX or obj["ymax"] > endY or obj["xmin"] \
-                < 0 or obj["ymin"] < 0:
-                continue
-
-            # build a label consisting of the predicted class and
-            # associated probability
-            label = "{}: {:.2f}%".format(LABELS[obj["class_id"]],
-                obj["confidence"] * 100)
-            print(label)
+    while(detectResult == False):
+        
+        startTimerTime = time.perf_counter()
+        while(elapseTimerTime < setTimerTime):
             
-            tag = LABELS[obj["class_id"]]
-            if (tag == "person"):
-                PERSON_Stat = PERSON_Stat+ 1
-            elif (tag == "dog"):
-                DOG_Stat = DOG_Stat+ 1
-            elif(tag == "cat"):
-                CAT_Stat = CAT_Stat+ 1
+            # grab the next frame and handle VideoCapture or VideoStream
+            orig = vs.read()
+            orig = orig[1] if args["input"] is not None else orig
+
+            # if we are viewing a video and we did not grab a frame then we
+            # have reached the end of the video
+            if args["input"] is not None and orig is None:
+                break
+
+            # resize original frame to have a maximum width of 500 pixel and
+            # input_frame to network size
+            orig = imutils.resize(orig, width=500)
+            frame = cv2.resize(orig, (w, h))
+
+            # change data layout from HxWxC to CxHxW
+            frame = frame.transpose((2, 0, 1))
+            frame = frame.reshape((n, c, h, w))
+
+            # start inference and initialize list to collect object detection
+            # results
+            output = execNet.infer({inputBlob: frame})
+            objects = []
+
+            # loop over the output items
+            for (layerName, outBlob) in output.items():
+                # create an object with required tinyYOLOv3 parameters
+                layerParams = TinyYOLOV3Params(net.layers[layerName].params,
+                    outBlob.shape[2])
+
+                # parse the output region
+                objects += TinyYOLOv3.parse_yolo_region(outBlob,
+                    frame.shape[2:], orig.shape[:-1], layerParams,
+                    conf["prob_threshold"])
+
+            # loop over each of the objects
+            for i in range(len(objects)):
+                # check if the confidence of the detected object is zero, if
+                # it is, then skip this iteration, indicating that the object
+                # should be ignored
+                if objects[i]["confidence"] == 0:
+                    continue
+
+                # loop over remaining objects[Intersection over Union (IoU)]
+                for j in range(i + 1, len(objects)):
+                    # check if the IoU of both the objects exceeds a
+                    # threshold, if it does, then set the confidence of
+                    # that object to zero
+                    if TinyYOLOv3.intersection_over_union(objects[i],
+                        objects[j]) > conf["iou_threshold"]:
+                        objects[j]["confidence"] = 0
+
+            # filter objects by using the probability threshold -- if a an
+            # object is below the threshold, ignore it
+            objects = [obj for obj in objects if obj['confidence'] >= \
+                conf["prob_threshold"]]
+
+        ############################Object Detection Frame & Stats###########################
+
+            # store the height and width of the original frame
+            (endY, endX) = orig.shape[:-1]
+
+            # loop through all the remaining objects
+            for obj in objects:
+                # validate the bounding box of the detected object, ensuring
+                # we don't have any invalid bounding boxes
+                if obj["xmax"] > endX or obj["ymax"] > endY or obj["xmin"] \
+                    < 0 or obj["ymin"] < 0:
+                    continue
+
+                # build a label consisting of the predicted class and
+                # associated probability
+                label = "{}: {:.2f}%".format(LABELS[obj["class_id"]],
+                    obj["confidence"] * 100)
+                print(label)
                 
+                tag = LABELS[obj["class_id"]]
+                if (tag == "person"):
+                    PERSON_Stat = PERSON_Stat+ 1
+                elif (tag == "dog"):
+                    DOG_Stat = DOG_Stat+ 1
+                elif(tag == "cat"):
+                    CAT_Stat = CAT_Stat+ 1
+                    
 
-            # calculate the y-coordinate used to write the label on the
-            # frame depending on the bounding box coordinate
-            y = obj["ymin"] - 15 if obj["ymin"] - 15 > 15 else \
-                obj["ymin"] + 15
+                # calculate the y-coordinate used to write the label on the
+                # frame depending on the bounding box coordinate
+                y = obj["ymin"] - 15 if obj["ymin"] - 15 > 15 else \
+                    obj["ymin"] + 15
 
-            # draw a bounding box rectangle and label on the frame
-            cv2.rectangle(orig, (obj["xmin"], obj["ymin"]), (obj["xmax"],
-                obj["ymax"]), COLORS[obj["class_id"]], 2)
-            cv2.putText(orig, label, (obj["xmin"], y),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, COLORS[obj["class_id"]], 3)
+                # draw a bounding box rectangle and label on the frame
+                cv2.rectangle(orig, (obj["xmin"], obj["ymin"]), (obj["xmax"],
+                    obj["ymax"]), COLORS[obj["class_id"]], 2)
+                cv2.putText(orig, label, (obj["xmin"], y),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, COLORS[obj["class_id"]], 3)
 
-        # display the current frame to the screen
-        cv2.imshow("TinyYOLOv3", orig)
+            # display the current frame to the screen
+            cv2.imshow("TinyYOLOv3", orig)
 
-        # update the FPS counter
-        fps.update()
-        
-        detectIterations = detectIterations + 1
-        endTime = time.perf_counter()
-        elapseTime = endTime - startTime #seconds
-        print(elapseTime)
+            # update the FPS counter
+            fps.update()
+            
+            detectIterations = detectIterations + 1
+            endTime = time.perf_counter()
+            elapseTime = endTime - startTime #seconds
+            print(elapseTime)
 
-    # stop the timer and display FPS information
-    fps.stop()
-    print("[INFO] elapsed time: {:.2f}".format(fps.elapsed()))
-    print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
-    print("[INFO] Time Frame Calculation for Person: ", PERSON_Stat)
-    print("[INFO] Time Frame Calculation for Dog: ", DOG_Stat)
-    print("[INFO] Time Frame Calculation for Cat: ", CAT_Stat)
+        # stop the timer and display FPS information
+        fps.stop()
+        print("[INFO] elapsed time: {:.2f}".format(fps.elapsed()))
+        print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
+        print("[INFO] Time Frame Calculation for Person: ", PERSON_Stat)
+        print("[INFO] Time Frame Calculation for Dog: ", DOG_Stat)
+        print("[INFO] Time Frame Calculation for Cat: ", CAT_Stat)
 
-    #calculate confidence level
-    print("Calculating OD Stats")
-    IterationPercentage = elapseTimerTime / detectIterations
-    print(IterationPercentage)
+        #calculate confidence level
+        print("Calculating OD Stats")
+        IterationPercentage = elapseTimerTime / detectIterations
+        print(IterationPercentage)
 
-    DOG_Final= DOG_Stat * IterationPercentage
-    print(DOG_Final)
+        DOG_Final= DOG_Stat * IterationPercentage
+        print(DOG_Final)
 
-    CAT_Final= CAT_Stat * IterationPercentage
-    print(CAT_Final)
+        CAT_Final= CAT_Stat * IterationPercentage
+        print(CAT_Final)
 
-    PERSON_Final= PERSON_Stat * IterationPercentage
-    print(PERSON_Final)
+        PERSON_Final= PERSON_Stat * IterationPercentage
+        print(PERSON_Final)
 
-    if(((DOG_Final or CAT_Final) > confidenceTimeThreshold) and (PERSON_Final < confidenceTimeThreshold )):
-        #pet is detected
-        detectResult = True
-        print("[INFO] Detection...")
-        #print("detectResult = True")
-    else :
-        detectResult = False
-        print("[INFO] No Detection...")
-        resetVars()
-        
-if (detectResult == True):
-    #Close resources
-    print("Reading TEMP")
-    Current_Temp = readTemp()
-    print(Current_Temp)
-    #Publish to AWS
-    publish_topic(outgoing_topic, Current_Temp)
+        if(((DOG_Final or CAT_Final) > confidenceTimeThreshold) and (PERSON_Final < confidenceTimeThreshold )):
+            #pet is detected
+            detectResult = True
+            print("[INFO] Detection...")
+            #print("detectResult = True")
+        else :
+            detectResult = False
+            print("[INFO] No Detection...")
+            resetVars()
+            
+    if (detectResult == True):
+        #Close resources
+        print("Reading TEMP")
+        Current_Temp = readTemp()
+        print(Current_Temp)
+        #Publish to AWS
+        publish_topic(outgoing_topic, Current_Temp)
 
-    # stop the video stream and close any open windows1
-    vs.stop() #if args["input"] is None else vs.release()
-    cv2.destroyAllWindows()
+        # stop the video stream and close any open windows1
+        vs.stop() #if args["input"] is None else vs.release()
+        cv2.destroyAllWindows()
 
 
 ###################################END OF FILE######################################
