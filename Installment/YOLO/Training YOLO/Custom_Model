@@ -38,5 +38,5 @@ filters = 24
 [yolo]
 #number of classes the dataset contains
 classes = 3
-random = 0
+random = 1
 
