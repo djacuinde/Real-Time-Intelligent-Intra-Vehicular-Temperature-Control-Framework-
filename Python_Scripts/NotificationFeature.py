@@ -1,4 +1,4 @@
-#enable google less secure app setting by https://www.google.com/settings/security/lesssecureapps
+#enable google less secure app setting by https://www.google.com/settings/security/lesssecureappss
 
 import smtplib
 from cryptography.fernet import Fernet
@@ -19,6 +19,7 @@ carriers ={
 SMTP_SERVER = 'smtp.gmail.com' #Email Server 
 SMTP_PORT = 587 #Server Port 
 GMAIL_USERNAME = 'savinglife2020fresnostate@gmail.com' #gmail account of SENDER
+#PASSWORD = 'Save#Lives*='
 SUBJECT = 'PVH Prevention Service'
 MESSAGE = 'There is an unattended PET is your vehicle!'
 
@@ -40,6 +41,7 @@ class Notification:
             #Login to Gmail
             session.login(GMAIL_USERNAME, bytes(ck.decrypt(ct)).decode("utf-8"))
             #session.login(GMAIL_USERNAME, PASSWORD)
+            
             #Send Email & SMS then Exit
             session.sendmail(GMAIL_USERNAME, RECIPIENT , headers + "\r\n\r\n" + MESSAGE) #email
             PHONE_NUM = phoneNumber + '{}'.format(carriers[carrierType])  
@@ -49,3 +51,4 @@ class Notification:
 if __name__ == '__main__':
     N = Notification
     N.sendNotification('djacuinde96@gmail.com', '5597045940', 'att')
+
