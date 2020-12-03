@@ -11,6 +11,17 @@
 
 ####################################Libraries########################################
 
+##AWS IoT Core
+import argparse
+from awscrt import io, mqtt, auth, http
+from awsiot import mqtt_connection_builder
+import sys
+import threading
+import time
+from uuid import uuid4
+
+from DTH import readTemp
+
 # Movidius NCS2
 from openvino.inference_engine import IENetwork 
 from openvino.inference_engine import IEPlugin
@@ -32,149 +43,139 @@ import time
 import cv2
 import os
 
-#Temperature 
-from DTH import readTemp
 
-##AWS IoT Core
-import argparse
-from awscrt import io, mqtt, auth, http
-from awsiot import mqtt_connection_builder
-import sys
-import threading
-import time
-from uuid import uuid4
 
 ####################################Functions########################################
+# Callback when the subscribed topic receives a message
+def on_message_received(topic, payload, **kwargs):
+    #global current_temp
+    global finish
+    print("Received message from topic '{}': {}".format(topic, payload))
+    topic_parsed = False
+    if "/" in topic:
+        parsed_topic = topic.split("/")
+        if len(parsed_topic) == 3:
+            # this topic has the correct format
+            if (parsed_topic[0] == 'SD_M2') and (parsed_topic[2] == 'details'):
+                # this is a topic we care about, so check the 2nd element
+                if (parsed_topic[1] == 'recheck'):
+                    print("Status: {}".format(payload))
+                    if (Status == 'Complete'):
+                        finish = True
+                topic_parsed = True            
+    if not topic_parsed:
+            print("Unrecognized message topic.")
+    global received_count
+    received_count += 1
+    if received_count == 1:
+        received_all_event.set()
+
+    
+def on_connection_interrupted(connection, error, **kwargs):
+    print("Connection interrupted. error: {}".format(error))
+
+# Callback when an interrupted connection is re-established.
+def on_connection_resumed(connection, return_code, session_present, **kwargs):
+    print("Connection resumed. return_code: {} session_present: {}".format(return_code, session_present))
+
+    if return_code == mqtt.ConnectReturnCode.ACCEPTED and not session_present:
+        print("Session did not persist. Resubscribing to existing topics...")
+        resubscribe_future, _ = connection.resubscribe_existing_topics()
+
+        # Cannot synchronously wait for resubscribe result because we're on the connection's event-loop thread,
+        # evaluate result with a callback instead.
+        resubscribe_future.add_done_callback(on_resubscribe_complete)
+
+def on_resubscribe_complete(resubscribe_future):
+    resubscribe_results = resubscribe_future.result()
+    print("Resubscribe results: {}".format(resubscribe_results))
+
+    for topic, qos in resubscribe_results['topics']:
+        if qos is None:
+            sys.exit("Server rejected resubscribe to topic: {}".format(topic))
+            
+##Subscription Topic
+def subscribe(subscribed_topic):  ##pass in topic name in string format. ex SD_M1/temp/details
+    # Subscribe
+    print("Subscribing to topic '{}'...".format(subscribed_topic))
+    subscribe_future, packet_id = mqtt_connection.subscribe(
+        topic=subscribed_topic,
+        qos=mqtt.QoS.AT_LEAST_ONCE,
+        callback=on_message_received)
+
+    subscribe_result = subscribe_future.result()
+    print("Subscribed with {}".format(str(subscribe_result['qos'])))
+
+##Publish to a topic
+def publish_topic(pub_top_name,pub_top_message):
+    global publish_count
+    print("Publishing message to topic '{}': {}".format(pub_top_name, pub_top_message))
+    mqtt_connection.publish(
+        topic=pub_top_name,
+        payload=pub_top_message,
+        qos=mqtt.QoS.AT_LEAST_ONCE)
+    time.sleep(1)
+
+
+
+incoming_topic = 'SD_M2/recheck/details'
+outgoing_topic = 'SD_M1/temp/details'
+
+##AWS IoT logging
+#original line: io.init_logging(getattr(io.LogLevel, args.verbosity), 'stderr')
+io.init_logging(getattr(io.LogLevel, io.LogLevel.NoLogs.name), 'stderr')
+
+##connect to AWS
+##connection variables
+event_loop_group = io.EventLoopGroup(1)
+host_resolver = io.DefaultHostResolver(event_loop_group)
+client_bootstrap = io.ClientBootstrap(event_loop_group, host_resolver)
+
+##Replace the below with necessary value for thing M1 or M2
+mqtt_connection = mqtt_connection_builder.mtls_from_path(
+    endpoint='a3f97mcy639kgs-ats.iot.us-east-2.amazonaws.com',
+    cert_filepath="/home/pi/certs/certificate.pem.crt",
+    pri_key_filepath='/home/pi/certs/private.pem.key',
+    client_bootstrap=client_bootstrap,
+    ca_filepath='/home/pi/certs/AmazonRootCA1.pem',
+    on_connection_interrupted=on_connection_interrupted,
+    on_connection_resumed=on_connection_resumed,
+    client_id="SD_M1-" + str(uuid4()),
+    clean_session=False,
+    keep_alive_secs=6)
+##Redefined endpoint and client as local variables##This is not strictly needed except for print statement.    
+endpoint='a3f97mcy639kgs-ats.iot.us-east-2.amazonaws.com'
+client_id="SD_M1-" + str(uuid4())
+
+print("Connecting to {} with client ID '{}'...".format(endpoint, client_id))
+
+connect_future = mqtt_connection.connect()
+
+# Future.result() waits until a result is available
+connect_future.result()
+print("Connected to AWS!")
+
+subscribe(incoming_topic)
+
+#intilize variables AWS
+received_count = 0 
+publish_count = 0
+global received_all_event
+received_all_event = threading.Event()
+lastsendtime = 0.0
+global finish
+finish = False
+
+def resetVars():    
+    startTimerTime = 0.0
+    endTimerTime = 0.0
+    elapseTimerTime = 0.0
+    detectIterations = 0
+    DOG_Stat = 0
+    CAT_Stat = 0
+    PERSON_Stat = 0
 
 def Object_Detection():
-    
-    def resetVars():    
-        startTimerTime = 0.0
-        endTimerTime = 0.0
-        elapseTimerTime = 0.0
-        detectIterations = 0
-        DOG_Stat = 0
-        CAT_Stat = 0
-        PERSON_Stat = 0
-
-    
-    def on_connection_interrupted(connection, error, **kwargs):
-        print("Connection interrupted. error: {}".format(error))
-
-
-    # Callback when an interrupted connection is re-established.
-    def on_connection_resumed(connection, return_code, session_present, **kwargs):
-        print("Connection resumed. return_code: {} session_present: {}".format(return_code, session_present))
-
-        if return_code == mqtt.ConnectReturnCode.ACCEPTED and not session_present:
-            print("Session did not persist. Resubscribing to existing topics...")
-            resubscribe_future, _ = connection.resubscribe_existing_topics()
-
-            # Cannot synchronously wait for resubscribe result because we're on the connection's event-loop thread,
-            # evaluate result with a callback instead.
-            resubscribe_future.add_done_callback(on_resubscribe_complete)
-
-
-    def on_resubscribe_complete(resubscribe_future):
-        resubscribe_results = resubscribe_future.result()
-        print("Resubscribe results: {}".format(resubscribe_results))
-
-        for topic, qos in resubscribe_results['topics']:
-            if qos is None:
-                sys.exit("Server rejected resubscribe to topic: {}".format(topic))
-
-
-    # Callback when the subscribed topic receives a message
-    def on_message_received(topic, payload, **kwargs):
-        #global current_temp
-        global finish
-        print("Received message from topic '{}': {}".format(topic, payload))
-        topic_parsed = False
-        if "/" in topic:
-            parsed_topic = topic.split("/")
-            if len(parsed_topic) == 3:
-                # this topic has the correct format
-                if (parsed_topic[0] == 'SD_M2') and (parsed_topic[2] == 'details'):
-                    # this is a topic we care about, so check the 2nd element
-                    if (parsed_topic[1] == 'recheck'):
-                        print("Status: {}".format(payload))
-                        #current_temp = float(payload)  ##Convert the received string into a float. 
-                        #if current_temp == -999.0:##recieving a payload value of -999.0 will cause the session to disconnect.
-                        if (Status == 'Complete'):
-                            finish = True
-                    topic_parsed = True            
-        if not topic_parsed:
-                print("Unrecognized message topic.")
-        global received_count
-        received_count += 1
-        if received_count == incount:
-            received_all_event.set()
-
-    ##Subscription Topic
-    def subscribe(subscribed_topic):  ##pass in topic name in string format. ex SD_M1/temp/details
-        # Subscribe
-        print("Subscribing to topic '{}'...".format(subscribed_topic))
-        subscribe_future, packet_id = mqtt_connection.subscribe(
-            topic=subscribed_topic,
-            qos=mqtt.QoS.AT_LEAST_ONCE,
-            callback=on_message_received)
-
-        subscribe_result = subscribe_future.result()
-        print("Subscribed with {}".format(str(subscribe_result['qos'])))
-
-    ##Publish to a topic
-    def publish_topic(pub_top_name,pub_top_message):
-        global publish_count
-        print("Publishing message to topic '{}': {}".format(pub_top_name, pub_top_message))
-        mqtt_connection.publish(
-            topic=pub_top_name,
-            payload=pub_top_message,
-            qos=mqtt.QoS.AT_LEAST_ONCE)
-        time.sleep(1)
-#         publish_count += 1 
-    
-    #######################################SETUP########################################
-    #Topics
-    incoming_topic = 'SD_M2/recheck/details'
-    outgoing_topic = 'SD_M1/temp/details'
-
-    ##AWS IoT logging
-    #original line: io.init_logging(getattr(io.LogLevel, args.verbosity), 'stderr')
-    io.init_logging(getattr(io.LogLevel, io.LogLevel.NoLogs.name), 'stderr')
-
-    ##connect to AWS
-    ##connection variables
-    event_loop_group = io.EventLoopGroup(1)
-    host_resolver = io.DefaultHostResolver(event_loop_group)
-    client_bootstrap = io.ClientBootstrap(event_loop_group, host_resolver)
-
-    ##Replace the below with necessary value for thing M1 or M2
-    mqtt_connection = mqtt_connection_builder.mtls_from_path(
-        endpoint='a3f97mcy639kgs-ats.iot.us-east-2.amazonaws.com',
-        cert_filepath="/home/pi/certs/certificate.pem.crt",
-        pri_key_filepath='/home/pi/certs/private.pem.key',
-        client_bootstrap=client_bootstrap,
-        ca_filepath='/home/pi/certs/AmazonRootCA1.pem',
-        on_connection_interrupted=on_connection_interrupted,
-        on_connection_resumed=on_connection_resumed,
-        client_id="SD_M1-" + str(uuid4()),
-        clean_session=False,
-        keep_alive_secs=6)
-    ##Redefined endpoint and client as local variables##This is not strictly needed except for print statement.    
-    endpoint='a3f97mcy639kgs-ats.iot.us-east-2.amazonaws.com'
-    client_id="SD_M1-" + str(uuid4())
-
-    print("Connecting to {} with client ID '{}'...".format(endpoint, client_id))
-
-    connect_future = mqtt_connection.connect()
-
-    # Future.result() waits until a result is available
-    connect_future.result()
-    print("Connected to AWS!")
-
-    subscribe(incoming_topic)
-
-
     #Object Detection
     print("Initializing Parameters")
     startTimerTime = 0.0
@@ -189,13 +190,6 @@ def Object_Detection():
     PERSON_Stat = 0
     confidenceTimeThreshold = .70
 
-    #intilize variables AWS
-    received_count = 0 
-    publish_count = 0
-    received_all_event = threading.Event()
-    lastsendtime = 0.0
-    global finish
-    finish = False
 
     # Command Line Interface #
     # construct the argument parser and parse the arguments
@@ -252,14 +246,8 @@ def Object_Detection():
     fps = FPS().start()
 
     ######################################Processing#####################################
-    #SETUP == False
-    #Detection Flag
-    #detectResult = False 
 
-    print("[INFO] Runnig Detection...")
-
-#    while(detectResult == False):
-        
+    print("[INFO] Runnig Detection...")     
     startTimerTime = time.perf_counter()
     while(elapseTimerTime < setTimerTime):
         
@@ -395,43 +383,30 @@ def Object_Detection():
     print(PERSON_Final)
 
     if(((DOG_Final or CAT_Final) > confidenceTimeThreshold) and (PERSON_Final < confidenceTimeThreshold )):
-        #pet is detected
-        #detectResult = True
-        
-        #Close resources
+        print("[INFO] Detected ...")
         print("Reading TEMP")
         Current_Temp = readTemp()
-        print(Current_Temp)
-        #Publish to AWS
-        publish_topic(outgoing_topic, Current_Temp)
+        print("Current Temp: ", Current_Temp, "*C")
+
+        #publish_topic(outgoing_topic, Current_Temp)
         #vs.stop()
-        #print("[INFO] Detection...")
-        return 1
+
+        return Current_Temp
     else:
+        print("[INFO] No Detections ...")
         return 0
-            #print("detectResult = True")
-#         else :
-#             detectResult = False
-#             print("[INFO] No Detection...")
-#             resetVars()
-#             Object_Detection()
-#             
-#     if (detectResult == True):
-#         #Close resources
-#         print("Reading TEMP")
-#         Current_Temp = readTemp()
-#         print(Current_Temp)
-#         #Publish to AWS
-#         publish_topic(outgoing_topic, Current_Temp)
-# 
-#         # stop the video stream and close any open windows1
-#         vs.stop() #if args["input"] is None else vs.release()
+
+
+        # stop the video stream and close any open windows1
+        #vs.stop() #if args["input"] is None else vs.release()
         #cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     while (1):
-        test = Object_Detection()
-        if (test):
+        temp = Object_Detection()
+        print (temp)
+        if (temp != 0):
+            publish_topic(outgoing_topic, temp)
             if not received_all_event.is_set():
                 print("Waiting for all messages to be received...")
 
@@ -443,3 +418,5 @@ if __name__ == '__main__':
             Object_Detection()
 
 ###################################END OF FILE######################################
+
+
