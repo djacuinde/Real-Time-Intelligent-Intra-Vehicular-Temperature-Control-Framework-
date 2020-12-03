@@ -2,11 +2,12 @@
 ##for California State Univ Fresno Senior Design 186B 2020
 ##by James Dols and Daniel Jacuinde
 
-
+import os
 #python-can libarary
 import can
 #Text and SMS messages
 import NotificationFeature
+from NotificationFeature import Notification
 ##necessary dependicies for interaction with AWS IoT Core
 import argparse
 from awscrt import io, mqtt, auth, http
@@ -106,14 +107,14 @@ def publish_topic(pub_top_name,pub_top_message):
      
 ##END Function definitions.#######################333
 
+
+
 ##AWS IoT logging
 #original line: io.init_logging(getattr(io.LogLevel, args.verbosity), 'stderr')
 io.init_logging(getattr(io.LogLevel, io.LogLevel.NoLogs.name), 'stderr')
 
 ##connect to AWS
 ##connection variables
-
-
 
 event_loop_group = io.EventLoopGroup(1)
 host_resolver = io.DefaultHostResolver(event_loop_group)
@@ -147,8 +148,10 @@ print("Connected!")
 ##Subscribes to the topic
 subscribe(incoming_topic)
 
+
 ###bring up the virtual can bus
-bus = can.Bus(interface = 'socketcan',channel ='vcan0',receive_own_messages=True)
+os.system('./setup_vcan.sh') ##create the virtual network
+bus = can.Bus(interface = 'socketcan',channel ='vcan0',receive_own_messages=True) ##define the network in pythonCan
 
 
 ### start main loop
@@ -166,19 +169,25 @@ while not finish:
     if time.time()-lastsendtime > 120: #prevents spamming notifications
         print('At least two minutes have past')
         print('Sending a notification to the registered owner')
-        ##N = Notification
-        ##N.sendNotification('djacuinde96@gmail.com', '5597045940', 'att')
+##        N = Notification
+##        N.sendNotification('djacuinde96@gmail.com', '5597045940', 'att')
         lastsendtime =time.time()
     else:
         print('Too soon to send another notification')
 
     if current_temp > 80.5:
         print('Turning on the AC')
-        message = can.Message(arbitration_id=392, is_extended_id=False,data =[0x03])## set this to desired message to turn on AC
+        ## frames to turn on AC
+        message = can.Message(arbitration_id=903, is_extended_id=False,data =[0x80, 0x00, 0x00, 0x00, 0x50])
+        message2 = can.Message(arbitration_id=904, is_extended_id=False,data =[0x00, 0x00, 0x01, 0x02, 0x04])
         bus.send(message, timeout=0.2) ##transmits the message.
+        bus.send(message2, timeout=0.2) ##transmits the message.
     else:
-        message = can.Message(arbitration_id=392, is_extended_id=False,data =[0x00])## set this to desired message to turn off AC
+        ##frames to turn off the AC
+        message = can.Message(arbitration_id=903, is_extended_id=False,data =[0x00, 0x00, 0x00, 0x00, 0x00])
+        message2 = can.Message(arbitration_id=904, is_extended_id=False,data =[0x00, 0x00, 0x00, 0x00])
         bus.send(message, timeout=0.2) ##transmits the message.
+        bus.send(message2, timeout=0.2) ##transmits the message.
         print('Temp is ok, no action needed')
 
     time.sleep(1)  #sleep then send a message back to M1
