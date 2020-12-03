@@ -7,7 +7,8 @@
 # $ python detect_realtime_tinyyolo_ncs.py --conf config/config.json 
 
 # Script was developed by Adrian Rosebrock
-# Original Script: 
+# Original Script: detect_realtime_tinyyolo_ncs.py
+
 # Modified by Daniel Jacuinde from CSU, Fresno
 
 ####################################Libraries########################################
@@ -45,7 +46,7 @@ import time
 import cv2
 import os
 
-####################################Functions########################################
+#################################### AWS Functions########################################
 # Callback when the subscribed topic receives a message
 def on_message_received(topic, payload, **kwargs):
     #global current_temp
@@ -115,11 +116,10 @@ def publish_topic(pub_top_name,pub_top_message):
         payload=pub_top_message,
         qos=mqtt.QoS.AT_LEAST_ONCE)
     time.sleep(1)
-
+    
+####################################AWS Login########################################
 incoming_topic = 'SD_M2/recheck/details'
 outgoing_topic = 'SD_M1/temp/details'
-
-####################################AWS Login########################################
 
 #original line: io.init_logging(getattr(io.LogLevel, args.verbosity), 'stderr')
 io.init_logging(getattr(io.LogLevel, io.LogLevel.NoLogs.name), 'stderr')
@@ -167,6 +167,7 @@ global finish
 finish = False
 
 def Object_Detection(InputType):
+    ####################################SETUP########################################
     #Object Detection
     print("Initializing Parameters")
     startTimerTime = 0.0
