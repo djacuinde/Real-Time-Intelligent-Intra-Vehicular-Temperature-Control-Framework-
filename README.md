@@ -9,6 +9,3 @@ In terms of improvements, the project could be expanded to detect children as we
 Project Developers:
 Daniel Jacuinde-Alvarez (CSU, Fresno) and James Dols (CSU, Fresno)
 
-
-
-Paper: https://drive.google.com/file/d/1DAk3_kKkFyRtHwXDpqd4jXwFziAJWpMC/view?usp=sharing 
