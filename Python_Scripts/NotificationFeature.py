@@ -3,9 +3,7 @@
 import smtplib
 from cryptography.fernet import Fernet
 
-#EMAIL_PASSWORD key
 ck = Fernet(b'FH0uzJ2Yl47lh1xYgcMBchLMbOcLg9gNPepDpOLOmgw=')
-#EMAIL_PASSWORD cipher password
 ct = b'gAAAAABfqgEZh_XKJgYrF2NeHPYkNyFSgRHbC8c6M94G7hNP9f1aoH7MHqDvZcdImBQxF6PkY36pAXy1Jwy2sOe_hUG9g8DyQw=='
 
 #SMS ending
@@ -39,7 +37,6 @@ class Notification:
             
             #Login to Gmail
             session.login(GMAIL_USERNAME, bytes(ck.decrypt(ct)).decode("utf-8"))
-            #session.login(GMAIL_USERNAME, PASSWORD)
             
             #Send Email & SMS then Exit
             session.sendmail(GMAIL_USERNAME, RECIPIENT , headers + "\r\n\r\n" + MESSAGE) #email
@@ -49,5 +46,5 @@ class Notification:
             
 if __name__ == '__main__':
     N = Notification
-    N.sendNotification('djacuinde96@gmail.com', '5597045940', 'att')
+    N.sendNotification('XXX@gmail.com', '1234567890', 'att')
 
