@@ -24,6 +24,7 @@ received_all_event = threading.Event()
 lastsendtime = 0.0
 global finish
 finish = False
+acstatus = False ## Off = False, ON = True assumption is AC is off when system is initiated. 
 
 incoming_topic = 'SD_M1/temp/details'
 outgoing_topic = 'SD_M2/recheck/details'
@@ -166,8 +167,8 @@ while not finish:
     print("{} message(s) received.".format(received_count))
 
 
-    if time.time()-lastsendtime > 120: #prevents spamming notifications
-        print('At least two minutes have past')
+    if time.time()-lastsendtime > 180: #prevents spamming notifications 1 message every 2 minutes
+        print('At least two minutes have passed')
         print('Sending a notification to the registered owner')
 ##        N = Notification
 ##        N.sendNotification('djacuinde96@gmail.com', '5597045940', 'att')
@@ -175,22 +176,32 @@ while not finish:
     else:
         print('Too soon to send another notification')
 
-    if current_temp > 80.5:
-        print('Turning on the AC')
+    if current_temp > 32:  ##32C = 90F
+        print('Temp is over 32 Celcius Action may be needed.')
+        if acstatus == False:
+            print('Turning on the AC')
+        else:
+            print('AC already on no action required.')
         ## frames to turn on AC
         message = can.Message(arbitration_id=903, is_extended_id=False,data =[0x80, 0x00, 0x00, 0x00, 0x50])
         message2 = can.Message(arbitration_id=904, is_extended_id=False,data =[0x00, 0x00, 0x01, 0x02, 0x04])
         bus.send(message, timeout=0.2) ##transmits the message.
         bus.send(message2, timeout=0.2) ##transmits the message.
+        acstatus = True
     else:
-        ##frames to turn off the AC
-        message = can.Message(arbitration_id=903, is_extended_id=False,data =[0x00, 0x00, 0x00, 0x00, 0x00])
-        message2 = can.Message(arbitration_id=904, is_extended_id=False,data =[0x00, 0x00, 0x00, 0x00])
-        bus.send(message, timeout=0.2) ##transmits the message.
-        bus.send(message2, timeout=0.2) ##transmits the message.
-        print('Temp is ok, no action needed')
-
-    time.sleep(1)  #sleep then send a message back to M1
+        print('Temp is in range, AC not needed.')
+        if acstatus == False:
+            print('AC is already off no action required.')
+        else:
+            print('Turning the AC Off')
+            ##frames to turn off the AC
+            message = can.Message(arbitration_id=903, is_extended_id=False,data =[0x00, 0x00, 0x00, 0x00, 0x00])
+            message2 = can.Message(arbitration_id=904, is_extended_id=False,data =[0x00, 0x00, 0x00, 0x00])
+            bus.send(message, timeout=0.2) ##transmits the message.
+            bus.send(message2, timeout=0.2) ##transmits the message. 
+            acstatus = False        
+    
+    time.sleep(1)  #sleep then send a message back to M1 : set to 1 to speed up debug testing
 
     publish_topic(outgoing_topic,outgoing_message)
     received_all_event.clear()##reset wait for received.
