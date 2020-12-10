@@ -18,7 +18,7 @@ SMTP_SERVER = 'smtp.gmail.com' #Email Server
 SMTP_PORT = 587 #Server Port 
 GMAIL_USERNAME = 'savinglife2020fresnostate@gmail.com' #gmail account of SENDER
 SUBJECT = 'PVH Prevention Service'
-MESSAGE = 'There is an unattended PET is your vehicle!'
+MESSAGE = 'There is an unattended PET in your vehicle!'
 
 
 class Notification:
