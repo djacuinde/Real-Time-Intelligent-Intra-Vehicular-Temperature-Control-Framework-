@@ -404,7 +404,5 @@ if __name__ == '__main__':
             print("{} message(s) received.".format(received_count))
             received_all_event.clear()##reset wait for received.
             received_count = 0 ##reset received_count
-        else:
-            Object_Detection(ImgType)
 
 ###################################END OF FILE######################################
